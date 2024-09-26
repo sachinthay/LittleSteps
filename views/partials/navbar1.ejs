@@ -1,0 +1,60 @@
+<img class="logo" src="/public/images/logo4.jpg" alt="logo" > 
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href=""></a></li>
+
+      <li class="dropdown" style="display: inline-block;">
+        <a href="/aboutUs" style="display: inline-block;">About Us</a>  <!-- Clicking this will go to the aboutUs page -->
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="display: inline-block;">
+          <span class="caret"></span>
+        </a>  <!-- Clicking this will toggle the dropdown -->
+        
+        <ul class="dropdown-menu" style="font-size: 20px;">
+          <li><a href="/ourStaff">Our Staff</a></li>
+        </ul>
+      </li>
+
+      <li><a href="/enrolment">Enrolment</a></li>
+      <li><a href="/news&events">News & Events</a></li>
+      <li><a href="/contactUs">Contact Us</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      <% if (userRole === 'admin') { %>
+        <li><a href="/adminOnly">Admin Profile</a></li>
+        <li><a href="/logout">Logout</a></li>
+      <% } %>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      <% if (userRole === 'teacher') { %>
+        <li><a href="/teacherProfile">Teacher Profile</a></li>
+        <li><a href="/logout">Logout</a></li>
+      <% } %>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+     <% if (userRole === 'parent') { %>
+        <li><a href="/parentProfile">Parent profile</a></li>
+        <li><a href="/logout">Logout</a></li>
+    <% } %> 
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <% if (userRole === 'guest') { %>
+        <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <% }  %>
+    </ul>
+
+  </div>
+</nav>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>

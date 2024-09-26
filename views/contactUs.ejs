@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+      <div class="contact-container">
+        <h2>Contact Us</h2>
+        
+        <div class="contact-item">
+          <i class="fa fa-map-marker" aria-hidden="true"></i>
+          <strong>Address:</strong> 
+          <p>37, Ogilvie Avenue,<br>Chartwell, Hamilton, 3210</p>
+        </div>
+      
+        <div class="contact-item">
+          <i class="fa fa-phone" aria-hidden="true"></i>
+          <strong>Telephone Number:</strong> 
+          <p>(+643) 456-7890</p>
+        </div>
+      
+        <div class="contact-item">
+          <i class="fa fa-envelope" aria-hidden="true"></i>
+          <strong>Email:</strong> 
+          <p><a href="mailto:info@littlesteps.com" style="color: black;">info@littlesteps.com</a></p>
+        </div>
+
+        <div class="contact-item">
+          <i class="fa fa-map" aria-hidden="true"></i>
+          <strong>Location:</strong>
+          <p>Find the location</p>
+        </div>
+      </div>
+        <!-- Map Section -->
+      <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3154.614130217471!2d175.29705967680422!3d-37.7521958719911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d6d185bde95215d%3A0xcd03386a9d46541!2s37%20Ogilvie%20Avenue%2C%20Chartwell%2C%20Hamilton%203210!5e0!3m2!1sen!2snz!4v1727305970729!5m2!1sen!2snz" 
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      </div>
+    </div>
+   
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>
