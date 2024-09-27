@@ -210,3 +210,11 @@ img {vertical-align: middle;}
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 /*/////////End Contact Us////////*/
+
+.nav-link {
+  color: white;
+}
+
+.carousel-inner {
+  width: 80%;
+}
