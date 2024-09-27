@@ -163,14 +163,15 @@ img {vertical-align: middle;}
 /*///////////// End Slide show ////////*/
 
 /*/////////Contact Us////////*/
-.contact-container {
-  max-width: 600px;
+.contact-container , .feedback-container{
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
 }
 
 .contact-item {
@@ -218,3 +219,26 @@ img {vertical-align: middle;}
 .carousel-inner {
   width: 80%;
 }
+/*/////////fbegin eedback////////*/
+.container {
+  display: grid;
+  grid-template-columns: 45% 45%; 
+  gap: 75px; /* Space between the containers */
+}
+
+.contact-container, .feedback-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-container {
+  justify-self: start; /* Align left */
+}
+
+.feedback-container {
+  justify-self: end; /* Align right */
+}
+/*/////////End feedback////////*/

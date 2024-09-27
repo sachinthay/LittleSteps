@@ -38,7 +38,7 @@ app.get('/enrolment', function (req, res){
 
     app.get('/contactUs', function (req, res){
       let userRole = req.session.userRole || 'guest';
-      res.render("contactUs", { userRole: userRole });
+      res.render("contactUs", { message: null, userRole: userRole });
   });
 
 
@@ -144,6 +144,30 @@ app.get('/login', function (req, res){
   let userRole = req.session.userRole || 'guest'; // Default to 'guest' if not logged in
   res.render('adminOnly', { userRole: userRole });
     });
+
+    app.post('/submitContactForm', function(req, res) {
+      let userrole = req.session.userrole || 'guest';
+      var FirstName = req.body.firstName;
+      var Gender = req.body.gender;
+      var Email = req.body.email;
+      var Subject= req.body.subject;
+      var Message=req.body.message;
+
+      let userRole = req.session.userRole || 'guest'; 
+
+      if (FirstName &&  Gender && Email && Subject && Message) {
+        var sql = `INSERT INTO contactUs (First_Name, Gender, Email, Subject, Message) VALUES ("${FirstName}", "${Gender}", "${Email}","${Subject}", "${Message}")`;
+        conn.query(sql, function(err, result) {
+          if (err) throw err;
+          console.log('record inserted');
+          res.render('contactUs',  { userRole: userRole, message: 'Your contact form was successfully submitted. We reach you soon. Thank you for contacting us!'});
+        })
+      }
+      else {
+        console.log("Error");
+      }
+      });
+
 
 app.listen(3000);
 console.log('Node app is running on port 3000');

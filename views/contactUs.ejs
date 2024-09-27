@@ -6,6 +6,7 @@
   <body>
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
+      <div class="container">
       <div class="contact-container">
         <h2>Contact Us</h2>
         
@@ -37,11 +38,52 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3154.614130217471!2d175.29705967680422!3d-37.7521958719911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d6d185bde95215d%3A0xcd03386a9d46541!2s37%20Ogilvie%20Avenue%2C%20Chartwell%2C%20Hamilton%203210!5e0!3m2!1sen!2snz!4v1727305970729!5m2!1sen!2snz" 
         width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
+
     </div>
 
-      </div>
+      <div class="feedback-container">
+        <h2>Contact Form</h2>
+        
+        <div class="contact-item">
+        </div>
+        <form action="/submitContactForm" method="post">
+
+          <label for="firstName">Name*:</label>
+          <input type="text" name="firstName" required><br><br>
+  
+          <label for="gender">Gender*:</label>
+           <select name="gender" id="gender" required>
+            <option value="" disabled selected>Please select one</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nosay">Prefer not to Say</option>
+          </select>
+  
+          <br><br>
+  
+          <label for="email">Email*:</label>
+          <input type="email" name="email" required><br><br>
+
+          <label for="subject">Subject*:</label>
+          <input type="text" name="subject" required><br><br>
+  
+           <label for="message">message*:</label> <br>
+          <textarea id="message" name="message" rows="5" cols="42" required>
+          </textarea><br><br>
+  
+          <input type="submit" value="Submit">
+          
+        </form>
+        <% if (message) { %>
+          <div style="color: green; font-weight: bold;"><%= message %></div>
+        <% } %>
     </div>
+
+    </div>
+  </div>
    
     <%- include('partials/footer.ejs') %>
   </body>
 </html>
+
+       
