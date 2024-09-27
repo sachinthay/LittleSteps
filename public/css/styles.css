@@ -159,7 +159,7 @@ img {vertical-align: middle;}
 
 .dropdown-toggle {
   padding-left: 5px;      /* Add some space between the "About Us" text and caret */
-}
+}}
 /*///////////// End Slide show ////////*/
 
 /*/////////Contact Us////////*/
@@ -174,7 +174,7 @@ img {vertical-align: middle;}
 }
 
 .contact-item {
-  margin: 15px 0;
+  margin: 25px 0;
   display: flex;
   align-items: center;
 }
@@ -186,7 +186,7 @@ img {vertical-align: middle;}
 }
 
 .contact-item strong {
-  font-size: 16px;
+  font-size: 20px;
   margin-right: 5px;
 }
 
