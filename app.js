@@ -146,14 +146,14 @@ app.get('/login', function (req, res){
     });
 
     app.post('/submitContactForm', function(req, res) {
-      let userrole = req.session.userrole || 'guest';
+
+      let userRole = req.session.userRole || 'guest';
+
       var FirstName = req.body.firstName;
       var Gender = req.body.gender;
       var Email = req.body.email;
       var Subject= req.body.subject;
       var Message=req.body.message;
-
-      let userRole = req.session.userRole || 'guest'; 
 
       if (FirstName &&  Gender && Email && Subject && Message) {
         var sql = `INSERT INTO contactUs (First_Name, Gender, Email, Subject, Message) VALUES ("${FirstName}", "${Gender}", "${Email}","${Subject}", "${Message}")`;
@@ -167,6 +167,31 @@ app.get('/login', function (req, res){
         console.log("Error");
       }
       });
+
+
+      app.post('/submitFeedbackForm', function(req, res) {
+
+        let userRole = req.session.userRole || 'guest';
+
+        var FirstName = req.body.firstName;
+        var LastName = req.body.lastName;
+        var Gender = req.body.gender;
+        var Email = req.body.email;
+        var ConfirmEmail = req.body.confirmEmail;
+        var Feed =req.body.feed;
+
+        if (FirstName && LastName && Gender && Email && ConfirmEmail && Feed && Email === ConfirmEmail) {
+          var sql = `INSERT INTO feedBack (First_Name, Last_Name, Gender, Email, Feed) VALUES ("${FirstName}", "${LastName}", "${Gender}","${Email}", "${Feed}")`;
+          conn.query(sql, function(err, result) {
+            if (err) throw err;
+            console.log('record inserted');
+            res.render('contactUs',  { userRole: userRole, message: 'Your feedback form successfully submited. Thank you!'});
+          })
+        }
+        else {
+          console.log("Error");
+        }
+        });
 
 
 app.listen(3000);

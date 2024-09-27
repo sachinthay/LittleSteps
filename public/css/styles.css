@@ -219,7 +219,7 @@ img {vertical-align: middle;}
 .carousel-inner {
   width: 80%;
 }
-/*/////////fbegin eedback////////*/
+/*/////////fbegin contactform////////*/
 .container {
   display: grid;
   grid-template-columns: 45% 45%; 
@@ -241,4 +241,20 @@ img {vertical-align: middle;}
 .feedback-container {
   justify-self: end; /* Align right */
 }
-/*/////////End feedback////////*/
+/*/////////End contactform////////*/
+
+/*/////////Begin feedback button////////*/
+
+.btn-black {
+  background-color: black;
+  color: white;
+  border: none;
+  font-size:large;
+}
+
+.btn-black:hover {
+  background-color: #333; /* Darker black on hover */
+  color: white;
+  font-size:large;
+}
+/*/////////End feedback button////////*/
