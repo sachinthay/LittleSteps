@@ -6,15 +6,24 @@
   <body>
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
+     
+      <% if (message) { %>
+        <div class="contact-container">
+        <div style="color: black; font-weight: bold;"><%= message %></div>
+      </div>
+      <% } %>
+     
+      <br>
+      <div class="container">
       <div class="contact-container">
         <h2>Contact Us</h2>
         
         <div class="contact-item">
           <i class="fa fa-map-marker" aria-hidden="true"></i>
-          <strong>Address:</strong> 
-          <p>37, Ogilvie Avenue,<br>Chartwell, Hamilton, 3210</p>
+          <strong>Address:</strong> <br>
+          <p>37, Ogilvie Avenue,Chartwell, Hamilton, 3210</p>
         </div>
-      
+
         <div class="contact-item">
           <i class="fa fa-phone" aria-hidden="true"></i>
           <strong>Telephone Number:</strong> 
@@ -32,16 +41,116 @@
           <strong>Location:</strong>
           <p>Find the location</p>
         </div>
-      </div>
         <!-- Map Section -->
       <div class="map-container">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3154.614130217471!2d175.29705967680422!3d-37.7521958719911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d6d185bde95215d%3A0xcd03386a9d46541!2s37%20Ogilvie%20Avenue%2C%20Chartwell%2C%20Hamilton%203210!5e0!3m2!1sen!2snz!4v1727305970729!5m2!1sen!2snz" 
-        width="50%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
 
+    </div>
+
+      <div class="feedback-container">
+        <h2>Contact Form</h2>
+        
+        <div class="contact-item">
+        </div>
+        <form action="/submitContactForm" method="post">
+
+          <label for="firstName">Name*:</label>
+          <input type="text" name="firstName" required><br><br>
+  
+          <label for="gender">Gender*:</label>
+           <select name="gender" id="gender" required>
+            <option value="" disabled selected>Please select one</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nosay">Prefer not to Say</option>
+          </select>
+  
+          <br><br>
+  
+          <label for="email">Email*:</label>
+          <input type="email" name="email" required><br><br>
+
+          <label for="subject">Subject*:</label>
+          <input type="text" name="subject" required><br><br>
+  
+           <label for="message">message*:</label> <br>
+          <textarea id="message" name="message" rows="5" cols="42" required>Add message...
+          </textarea><br><br>
+  
+          <input type="submit" value="Submit">
+          
+        </form>
+    </div>
+
+    </div>
+    <p>
+      <br>
+      <h3>If you would like to give us feedback for our service, please click the Feedback button below.</h3>
+      <!-- Manually control collapse behavior -->
+      <a class="btn btn-black" id="feedbackButton" href="#feedbackForm" role="button" aria-expanded="false" aria-controls="feedbackForm">
+        Feedback
+      </a>
+    </p>
+    <div class="collapse" id="feedbackForm" style="max-width: 500px; margin: auto;">
+      <div class="card card-body">
+        <h2>Feedback Form</h2><br>
+        <form action="/submitFeedbackForm" method="post">
+          <label for="firstName">First Name*:</label>
+          <input type="text" name="firstName" required><br><br>
+    
+          <label for="lastName">Last Name*:</label>
+          <input type="text" name="lastName" required><br><br>
+    
+          <label for="gender">Gender*:</label>
+          <select name="gender" id="gender" required>
+            <option value="" disabled selected>Please select one</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nosay">Prefer not to Say</option>
+          </select>
+    
+          <br><br>
+    
+          <label for="email">Email*:</label>
+          <input type="email" name="email" required><br><br>
+    
+          <label for="confirmEmail">Confirm Email*:</label>
+          <input type="email" name="confirmEmail" required><br><br>
+    
+          <label for="feed">Feedback:</label> <br>
+          <textarea id="feed" name="feed" rows="5" cols="42">Add feedback...</textarea><br><br>
+    
+          <input type="submit" value="Submit">
+        </form>
       </div>
     </div>
+    
+    <script>
+      // Manually control the collapse and prevent aria-expanded from changing
+      document.getElementById('feedbackButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        const feedbackForm = document.getElementById('feedbackForm');
+        const isCollapsed = feedbackForm.classList.contains('show');
+    
+        if (isCollapsed) {
+          feedbackForm.classList.remove('show');
+        } else {
+          feedbackForm.classList.add('show');
+        }
+    
+        // Manually keep aria-expanded as false
+        this.setAttribute('aria-expanded', 'false');
+      });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  
+  </div>
    
     <%- include('partials/footer.ejs') %>
   </body>
 </html>
+
+       
