@@ -226,7 +226,7 @@ img {vertical-align: middle;}
   gap: 75px; /* Space between the containers */
 }
 
-.contact-container, .feedback-container {
+.contact-container, .feedback-container, .register-container, .login-container{
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
@@ -240,6 +240,11 @@ img {vertical-align: middle;}
 
 .feedback-container {
   justify-self: end; /* Align right */
+}
+
+.register-container, .login-container{
+  margin: auto;
+  width: max-content;
 }
 /*/////////End contactform////////*/
 
@@ -258,3 +263,14 @@ img {vertical-align: middle;}
   font-size:large;
 }
 /*/////////End feedback button////////*/
+.dropdown a {
+  display: inline-block;  /* Make the links appear inline */
+  padding-right: 2px;     /* Optional: Adjust the spacing between the text and caret */
+}
+
+.dropdown-toggle {
+  padding-left: 1px;      /* Add some space between the "About Us" text and caret */
+}
+a{
+  color: white;
+}
