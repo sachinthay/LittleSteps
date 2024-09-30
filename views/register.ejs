@@ -5,9 +5,9 @@
   <body>
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
-    <div class="register">
-			<h1>Registration Form</h1>
-      <p>Please fill the following form.</p>
+    <div class="register-container">
+			<h1>Registration Form</h1><br>
+      <p>Please fill the following form.</p><br>
 
 			<form action="/registerUser" method="post">
 
@@ -44,7 +44,9 @@
 				<label for="confirmPassword">Confirm Password*:</label>
 				<input type="password" name="confirmPassword" placeholder="Confirm Password" required><br><br>
 		
-				<input type="submit" value="Register">
+				<div style="text-align: right;">
+					<input type="submit" value="Register">
+				</div>
 		
 		</form>
 		
