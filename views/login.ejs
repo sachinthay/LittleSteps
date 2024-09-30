@@ -5,16 +5,24 @@
   <body>
     <%- include('partials/navbar1.ejs')%>
     <div class="content">
+      <div class="login-container">
       <h2>Login</h2>
       <br>
       <form action="/auth" method="post">
+
+        <label for="email">Email:</label>
         <input type="email" name="email" placeholder="Email" id="email" required>
         <label for="password">
         </label>
+        <br><br>
+        <label for="password">Password:</label>
         <input type="password" name="password" placeholder="Password" id="password" required>
-        <input type="submit" value="Login">
+        <br><br>
+        <div style="text-align: right;">
+          <input type="submit" value="Login">
+        </div>
       </form>
-     
+    </div>
     </div>
   </body>
 </html>
