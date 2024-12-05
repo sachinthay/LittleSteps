@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+    
+      <h2>Gallery</h2>
+      <div class="gallery-container">
+          <% images.forEach(image => { %>
+              <div class="gallery-item">
+                  <img src="<%= '/public/' + image.image_url %>" alt="Gallery Image" onclick="openLightbox(this)">
+                  <% if (image.description) { %>
+                      <p><%= image.description %></p>
+                  <% } %>
+              </div>
+          <% }); %>
+      </div>
+      
+      <!-- Lightbox Modal -->
+      <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+          <span class="close">&times;</span>
+          <img class="lightbox-content" id="lightbox-image" alt="Full View">
+      </div>
+<br>
+      <h2>Events</h2>
+
+      <% events.forEach(event => { %>
+      <div class="event">
+          <h2><%= event.title %></h2>
+          <p><%= event.description %></p>
+          <p>Event Date: <%= event.event_date %></p>
+
+          <div class="event-gallery">
+              <% event.images.forEach(image => { %>
+              <div class="gallery-item">
+                  <img src="<%='/public/uploads/' + image %>" alt="Event Image" onclick="openLightbox(this)">
+              </div>
+              <% }); %>
+          </div>
+      </div>
+      <% }); %>
+
+ 
+  </div>
+      <%- include('partials/footer.ejs') %>
+  </body>
+</html>
+
+<script>
+
+function openLightbox(imgElement) {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    lightboxImage.src = imgElement.src;
+    lightbox.style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+</script>

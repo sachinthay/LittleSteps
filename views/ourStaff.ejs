@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+    
+    <h1>Our Staff</h1><br>
+    
+        
+   
+
+    <% if (manageStaffData.length != 0) {var i = 1; manageStaffData.forEach(function(data){%>
+      <table class="table table-striped table-dark">
+        <tr>
+          <td rowspan="4"><img src="/public/uploads/<%= data.Picture %>" alt="Uploaded Image" style="max-width: 100px;" /></td>
+          <th colspan="2" style="text-align: left;"><h2><%=data.Position%></h2></th></tr>
+          <tr>
+            <td class="gray-text" style="text-align: left;">Name</td>
+            <td class="gray-text" style="text-align: left;"><%= data.First_Name %> <%= data.Last_Name %></td>
+          </tr>
+          <tr>
+            <td class="gray-text" style="text-align: left;">Qualification</td>
+            <td class="gray-text" style="text-align: left;"><%= data.Qualification %></td>
+          </tr>
+          <tr>
+            <td class="gray-text" style="text-align: left;">Note</td>
+            <td class="gray-text" style="text-align: left;"><%= data.Note %></td>
+          </tr>
+      </table>
+      <br>
+    <% i++;})%> <%}%>
+
+    <div class="buttn">
+      <button class="butn" type="button" onclick="window.location.href='https://www.trademe.co.nz/a/jobs/education/early-childhood/search?gclid=Cj0KCQjw3vO3BhCqARIsAEWblcDpUUjpC_y0wEUF-3S3QhBwvIPIZCRr9ChHVB3s8_hqnSHthgYm43oaAlMyEALw_wcB'">Join Us</button>
+  </div>
+
+    </div>
+    <br>
+    <br>
+      <%- include('partials/footer.ejs') %>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<html>
+
+<head>
+  <%- include('partials/header1.ejs') %>
+</head>
+
+<body>
+  <%- include('partials/navbar1.ejs') %>
+  <div class="content">
+    <h1>Add Image to Gallery</h1>
+
+    <form action="/add-gallery" method="POST" enctype="multipart/form-data">
+      <table class="table table-striped table-dark">
+        <tr>
+          <th>
+            <label for="image">Upload Image:</label>
+          </th>
+          <td>
+            <input type="file" name="image" id="image" required>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <label for="description">Description (optional):</label>
+          </th>
+          <td>
+            <textarea name="description" id="description"></textarea>
+          </td>
+        </tr>
+        <tr>
+          <th colspan="2">
+            <button type="submit">Add to Gallery</button>
+        </tr>
+      </table>
+    </form>
+    <br>
+
+    <h1>Add Event Photos</h1>
+
+    <form action="/add-event-photos" method="POST" enctype="multipart/form-data">
+      <table class="table table-striped table-dark">
+        <!-- Select Event Date Dropdown -->
+        <tr>
+          <th><label for="event_date">Select Event Date:</label></th>
+          <td>
+            <select name="event_id" id="event" required onchange="populateEventDetails()">
+              <option value="" disabled selected>Select an event date</option>
+              <% events.forEach(event => { %>
+              <option value="<%= event.id %>" data-title="<%= event.title %>" data-date="<%= new Date(event.event_date).toLocaleDateString('en-CA') %>">
+                <%= new Date(event.event_date).toLocaleDateString('en-CA') %>
+              </option>
+              <% }); %>
+            </select>
+          </td>
+        </tr>
+
+        <!-- Event Title -->
+        <tr>
+          <th><label for="title">Event Title:</label></th>
+          <td><input type="text" id="title" disabled></td>
+        </tr>
+
+        <!-- Image Upload Field -->
+        <tr>
+          <th><label for="images">Upload Event Images: (You can select more photos)</label></th>
+          <td><input type="file" name="images" id="images" multiple required></td>
+        </tr>
+
+        <!-- Submit Button -->
+        <tr>
+          <th colspan="2"><button type="submit">Add Photos</button></th>
+        </tr>
+      </table>
+    </form>
+
+  </div>
+  <%- include('partials/footer.ejs') %>
+</body>
+
+</html>
+
+<script>
+  function populateEventDetails() {
+      const eventDropdown = document.getElementById("event");
+      const selectedOption = eventDropdown.options[eventDropdown.selectedIndex];
+  
+      // Populate the fields based on selected date
+      document.getElementById("title").value = selectedOption.getAttribute("data-title");
+      document.getElementById("description").value = selectedOption.getAttribute("data-description");
+  }
+</script>

@@ -6,15 +6,16 @@
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
     <%- include('partials/slideshow.ejs') %>
-    
-    <h1>Montessori education is our passion</h1>
-    <h2>and we love working with children</h2>
-    <h3>Welcome to Little Steps Child Care Center of Children, dedicated to following the principles of New Zealand Child Care 
-      Centers and implementing the Montessori method of education at a very high standard.</h3>
 
-    <h3> Little Steps was begun in January 2010. We were located at 108, MacFarlane Street, 
-      Hamilton East, Hamilton. Four years on, in September 2014 we moved to our very own premises, situated at 37, Ogilvie Avenue, Chartwell, Hamilton</h3>
+      <h1><%= homepageContent.find(item => item.Content_Type === '1').Content %></h1>
+      <h2><%= homepageContent.find(item => item.Content_Type === '2').Content %></h2>
+      <h3><%= homepageContent.find(item => item.Content_Type === '3').Content %></h3>
+      <h3><%= homepageContent.find(item => item.Content_Type === '4').Content %></h3>
+      <h3><%= homepageContent.find(item => item.Content_Type === '5').Content %></h3>
+
     </div>
+    <br>
+    <br>
       <%- include('partials/footer.ejs') %>
   </body>
 </html>

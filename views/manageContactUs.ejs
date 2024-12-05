@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+ 
+    <% if (message) { %>
+      <div class="contact-container">
+        <div style="color: white; font-weight: bold;"><%= message %></div>
+      </div>
+    <% } %>
+
+
+    <div class="form-container">
+      <h2>Contact Us or Give Feedback</h2>
+      <div class="form-selector">
+          <label for="formType">I want to:</label>
+          <select id="formType" onchange="toggleFormVisibility()">
+              <option value="" disabled selected>Select an option</option>
+              <option value="contact">Contact Us</option>
+              <option value="feedback">Give Feedback</option>
+          </select>
+      </div>
+  
+      <!-- Contact Us Form -->
+      <form id="contactForm" method="post" action="/submitContactForm" style="display: none;">
+          <div class="form-group">
+              <label for="firstName">First Name*:</label>
+              <input type="text" name="firstName" id="firstName" required>
+          </div>
+          <div class="form-group">
+              <label for="lastName">Last Name:</label>
+              <input type="text" name="lastName" id="lastName">
+          </div>
+          <div class="form-group">
+              <label for="gender">Gender*:</label>
+              <select name="gender" id="gender" required>
+                  <option value="" disabled selected>Please select one</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="nosay">Prefer not to Say</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="email">Email*:</label>
+              <input type="email" name="email" id="email" required>
+          </div>
+          <div class="form-group">
+              <label for="subject">Subject*:</label>
+              <input type="text" name="subject" id="subject" required>
+          </div>
+          <div class="form-group">
+              <label for="message">Message*:</label>
+              <textarea name="message" id="message" rows="5" required></textarea>
+          </div>
+          <div class="form-actions">
+              <input type="submit" value="Submit Contact Form">
+          </div>
+      </form>
+  
+      <!-- Feedback Form -->
+      <form id="feedbackForm" method="post" action="/submitFeedbackForm" style="display: none;">
+          <div class="form-group">
+              <label for="firstName">First Name*:</label>
+              <input type="text" name="firstName" id="firstName" required>
+          </div>
+          <div class="form-group">
+              <label for="lastName">Last Name:</label>
+              <input type="text" name="lastName" id="lastName">
+          </div>
+          <div class="form-group">
+              <label for="gender">Gender*:</label>
+              <select name="gender" id="gender" required>
+                  <option value="" disabled selected>Please select one</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="nosay">Prefer not to Say</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="email">Email*:</label>
+              <input type="email" name="email" id="email" required>
+          </div>
+          <div class="form-group">
+              <label for="confirmEmail">Confirm Email*:</label>
+              <input type="email" name="confirmEmail" id="confirmEmail" required>
+          </div>
+          <div class="form-group">
+              <label for="feed">Feedback*:</label>
+              <textarea name="feed" id="feed" rows="5" required></textarea>
+          </div>
+          <div class="form-actions">
+              <input type="submit" value="Submit Feedback Form">
+          </div>
+      </form>
+  </div>
+
+  <div class="contact-container">
+    <h2>Contact Us</h2>
+    
+    <div class="contact-item">
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        <strong>Address:</strong> <br>
+        <p><%= contact.address %></p> <!-- Dynamically rendered address -->
+    </div>
+
+    <div class="contact-item">
+        <i class="fa fa-phone" aria-hidden="true"></i>
+        <strong>Telephone Number:</strong> 
+        <p><%= contact.phone %></p> <!-- Dynamically rendered phone number -->
+    </div>
+
+    <div class="contact-item">
+        <i class="fa fa-envelope" aria-hidden="true"></i>
+        <strong>Email:</strong> 
+        <p><a href="mailto:<%= contact.email %>"><%= contact.email %></a></p> <!-- Dynamically rendered email -->
+    </div>
+
+    <div class="contact-item">
+        <i class="fa fa-map" aria-hidden="true"></i>
+        <strong>Location:</strong>
+        <p><%= contact.location %></p> <!-- Dynamically rendered location -->
+    </div>
+
+    <div class="map-container">
+      <%- contact.location_link %> <!-- This renders the raw HTML iframe from the database -->
+  </div>
+</div>
+  
+  <script>
+      function toggleFormVisibility() {
+          const formType = document.getElementById('formType').value;
+          const contactForm = document.getElementById('contactForm');
+          const feedbackForm = document.getElementById('feedbackForm');
+  
+          // Show the appropriate form based on the user's selection
+          if (formType === 'contact') {
+              contactForm.style.display = 'block';
+              feedbackForm.style.display = 'none';
+          } else if (formType === 'feedback') {
+              contactForm.style.display = 'none';
+              feedbackForm.style.display = 'block';
+          } else {
+              contactForm.style.display = 'none';
+              feedbackForm.style.display = 'none';
+          }
+      }
+  </script>
+
+<div class="contact-container">
+  <section class="admin-contact-form">
+    <h2>Update Contact Information</h2>
+    <form id="updateContactForm" method="post" action="/updateContactInfo">
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <textarea name="address" id="address" rows="2" required><%= contact.address %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" name="phone" id="phone" value="<%= contact.phone %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="<%= contact.email %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location_link">Google Maps Embed Link:</label>
+        <textarea name="location_link" id="location_link" rows="2" required><%= contact.location_link %></textarea>
+      </div>
+
+      <button type="submit">Update</button>
+    </form>
+  </section>
+</div>
+
+  
+  
+    
+  
+    
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>
+
+       

@@ -5,58 +5,43 @@
   <body>
     <%- include('partials/navbar1.ejs') %>
     <div class="content"> 
-    <h1>Enrolment</h1>
-    <h2>Fees</h2>
-    <table>
-      <tr> 
-        <th>Age limits =></th>
-        <th colspan="2">Under 3 years old</th>
-        <th colspan="2">Over 3 years old</th>
-      </tr>
-      <tr>
-        <th>Days</th>
-        <th>Short Day - Upto 6 hours per week</th>
-        <th>Long Day - Over 6 hours per week</th>
-        <th>Short Day - Upto 6 hours per week</th>
-        <th>Long Day - Over 6 hours per week (With 20 hours ECE attestation)</th>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>114</td>
-        <td>122</td>
-        <td>74</td>
-        <td>82</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>171</td>
-        <td>183</td>
-        <td>111</td>
-        <td>123</td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>228</td>
-        <td>244</td>
-        <td>148</td>
-        <td>184</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>285</td>
-        <td>305</td>
-        <td>185</td>
-        <td>255</td>
-      </tr>
-     
-    </table>
-<br>
-    <ul>
-      <li>Drop off time before 6.30 - 9.30 AM</li>
-      <li>Pick up time before 6.00 PM</li>
-      <li>Enrolment is 2 days minimum.</li>
-      <li>We offer 10% discount for siblings.</li>
-    </ul>
+      <h2>Enrolment</h2>
+      <h2>Fees</h2>
+      <table class="table table-hover">
+        <tr> 
+          <th>Age limits =></th>
+          <th colspan="2">Under 3 years old</th>
+          <th colspan="2">Over 3 years old</th>
+        </tr>
+        <tr>
+          <th>Days</th>
+          <th>* Short Day</th>
+          <th>**Long Day</th>
+          <th>*Short Day</th>
+          <th>**Long Day (With 20 hours ECE attestation)</th>
+        </tr>
+        <% feesData.forEach(fee => { %>
+          <tr>
+            <td><%= fee.day_count %></td>
+            <td><%= fee.short_day_fee_under_3 %></td>
+            <td><%= fee.long_day_fee_under_3 %></td>
+            <td><%= fee.short_day_fee_over_3 %></td>
+            <td><%= fee.long_day_fee_over_3 %></td>
+          </tr>
+        <% }) %>
+      </table>
+      <br>
+      <div class="left-align-section">
+        <h3>
+          <ul>
+            <% enrollmentDetails.forEach(detail => { %>
+              <li><%= detail %></li>
+            <% }); %>
+          </ul>
+        </h3>
+      </div>
+      
+
     </div>
     <%- include('partials/footer.ejs') %>
   </body>

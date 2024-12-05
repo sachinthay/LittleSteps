@@ -5,15 +5,152 @@
   <body>
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
-    <h1>Parent Portal</h1>
-    <h2>Update my Profile</h2>
-    <h3>Welcome to Little Steps Child Care Center of Children, dedicated to following the principles of New Zealand Child Care 
-      Centers and implementing the Montessori method of education at a very high standard.</h3>
+      <div class="profile-container">
+        <h2>Parent Profile</h2>
+        <br>
+        <% if (message) { %>
+          <div style="color: blue; font-weight: bold;"><%= message %></div>
+        <% } %>
+        <br>
 
-    <h3> Little Steps was begun in January 2010. We were located at 108, MacFarlane Street, 
-      Hamilton East, Hamilton. Four years on, in September 2014 we moved to our very own premises, situated at 37, Ogilvie Avenue, Chartwell, Hamilton</h3>
+        <form action="<%= editMode ? '/updateParentProfile' : '#' %>" method="post" enctype="multipart/form-data">
+          <table class="table table-striped">
+            <tr>
+              <th>Attributes</th>
+              <th>Values</th>
+            </tr>
+              <tr>
+                <th>First Name:</th>
+                <td>
+                  <% if (editMode) { %>
+                    <input type="text" name="first_name" value="<%= data.First_Name || '' %>" required>
+                  <% } else { %>
+                    <%= data.First_Name %>
+                  <% } %>
+                </td>
+              </tr>
+              <tr>
+                <th>Last Name:</th>
+                <td>
+                  <% if (editMode) { %>
+                    <input type="text" name="last_name" value="<%= data.Last_Name || '' %>" required>
+                  <% } else { %>
+                    <%= data.Last_Name %>
+                  <% } %>
+                </td>
+              </tr>
+              <tr>
+                <th>Email:</th>
+                <td>
+                  <% if (editMode) { %>
+                    <input type="email" name="email" value="<%= data.Email || '' %>" readonly>
+                  <% } else { %>
+                    <%= data.Email %>
+                  <% } %>
+                </td>
+              </tr>
+
+
+            <!-- old Picture -->
+            <tr>
+              <th>Picture</th>
+                <td>
+                  <!-- Image preview -->
+                  <img id="picturePreview" src="<%= data.Picture ? '/public/uploads/' + data.Picture : '' %>" alt="Profile Picture" width="100">
+                  <% if (editMode) { %>
+                  <input type="file" name="picture" accept="image/*" id="pictureInput">
+                  <input type="hidden" name="oldPicture" value="<%= data.Picture %>">
+                  <br><br>
+               
+                <% } else { %>
+                  <% if (!data.Picture) { %> No picture available <% } %>
+                <% } %> </td>
+            </tr>
+
+          
+            <!-- JavaScript for image preview in edit mode -->
+            <script>
+              document.getElementById('pictureInput')?.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = function(e) {
+                    document.getElementById('picturePreview').src = e.target.result;
+                  };
+                  reader.readAsDataURL(file);
+                }
+              });
+            </script>
+            <!-- Position -->
+            <tr>
+              <th>Relationship to child</th>
+              <% if (editMode) { %>
+                <td>
+                  <select name="relationship" id="relationship" required>
+                    <option value="" disabled selected>Please select one</option>
+                    <option value="Father" <%= data.Relationship === 'Father' ? 'selected' : '' %>>Father</option>
+                    <option value="Mother" <%= data.Relationship === 'Mother' ? 'selected' : '' %>>Mother</option>
+                    <option value="Guardian 1" <%= data.Relationship === 'Guardian 1' ? 'selected' : '' %>>Guardian 1</option>
+                    <option value="Guardian 2" <%= data.Relationship === 'Guardian 2' ? 'selected' : '' %>>Guardian 2</option>
+                  </select>
+                </td>
+              <% } else { %>
+                <td><%= data.Relationship || 'N/A' %></td>
+              <% } %>
+            </tr>
+
+           
+            <!-- Occupation -->
+            <tr>
+              <th>Occupation</th>
+              <% if (editMode) { %>
+                <td><input type="text" name="occupation" value="<%= data.Occupation || '' %>"></td>
+              <% } else { %>
+                <td><%= data.Occupation || 'N/A' %></td>
+              <% } %>
+            </tr>
+
+
+            <!-- Mobile -->
+            <tr>
+              <th>Mobile</th>
+              <% if (editMode) { %>
+                <td><input type="text" name="mobile" value="<%= data.Mobile || '' %>"></td>
+              <% } else { %>
+                <td><%= data.Mobile || 'N/A' %></td>
+              <% } %>
+            </tr>
+
+            <!-- Address -->
+            <tr>
+              <th>Address</th>
+              <% if (editMode) { %>
+                <td><input type="text" name="address" value="<%= data.Address || '' %>"></td>
+              <% } else { %>
+                <td><%= data.Address || 'N/A' %></td>
+              <% } %>
+            </tr>
+
+
+            <tr>
+              <td colspan="2" style="text-align: right;">
+              <!-- Display Edit button in view mode and Update button in edit mode -->
+              <% if (editMode) { %>
+                <input type="hidden" name="id" value="<%= data.ID %>">
+                <div style="text-align:right;">
+                  <input type="submit" value="Update" class="btn btn-success">
+                </div>
+              <% } else { %>
+                <br>
+                <a href="/editParent" class="btn btn-primary">Edit Profile</a>
+              <% } %>
+            </td>
+            </tr>
+
+          </table>
+        </form>
+
     </div>
-
-      <%- include('partials/footer.ejs') %>
+    <%- include('partials/footer.ejs') %>
   </body>
 </html>

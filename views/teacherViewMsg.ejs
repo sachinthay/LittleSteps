@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+
+
+    <div class="content">
+     
+    
+
+      <div class="profile-container">
+        <h1>Inbox</h1>
+    
+        <table class="table table-dark">
+          <tr>
+            <th>Parent</th>
+            <th>Relashioship to Child</th>
+            <th>Child</th>
+            <th>Topic</th>
+            <th>Message</th>
+            <th>Give Feedback</th>
+            <th>Delete</th>
+           
+          </tr>
+    
+        <% if (manageMsgData.length != 0) {var i = 1; manageMsgData.forEach(function(data){%>
+          <tr>
+            <td><%= data.Parent_First_Name %> <%= data.Parent_Last_Name %></td>
+            <td><%=data.Relationship %></td>
+            <td><%= data.Child_First_Name %> <%= data.Child_Last_Name %></td>
+            <td><%=data.Topic %></td>
+            <td><%=data.Message %></td>
+    
+    
+
+            <td>
+              <% if (!data.Feedback) { %>  <!-- Check for null or empty string -->
+                <form action="/feedbackInbox" method="post">
+                  <textarea name="feedback"></textarea>
+                  <input type="hidden" name="id" value="<%= data.ID %>">
+                  <input type="submit" value="Send">
+                </form>
+              <% } else { %>
+                <%= data.Feedback %>
+              <% } %>
+            </td>
+            <td>
+            
+              <form action="/deleteMsg" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                <input type="hidden" name="email" value="<%= data.Email %>">
+                <input type="submit" value="Delete">
+              </form>
+         
+            </td>
+          </tr>
+        <% i++;})%> <%}%>
+        
+      </table>
+    
+     
+        </div>
+
+    </div>
+
+
+
+    
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>
