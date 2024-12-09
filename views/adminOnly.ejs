@@ -6,12 +6,28 @@
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
     <h1>Admin Portal</h1>
-    <h2>Admin Page</h2>
-    <h3>Welcome to Little Steps Child Care Center of Children, dedicated to following the principles of New Zealand Child Care 
-      Centers and implementing the Montessori method of education at a very high standard.</h3>
+    <h2>My Duties</h2>
 
-    <h3> Little Steps was begun in January 2010. We were located at 108, MacFarlane Street, 
-      Hamilton East, Hamilton. Four years on, in September 2014 we moved to our very own premises, situated at 37, Ogilvie Avenue, Chartwell, Hamilton</h3>
+    <div class="left-align-section">
+      <ul><h3>
+    
+      <li ><a  href="/manageUser">User Register Approval & Delete Users</a> </li>
+      <li><a href=#>Manage Pages -</a> </li>
+      <ul>
+        <li><a   href="/editHome">Manage Home Page</a></li>
+        <li><a  href="/editAboutUs">Manage About Us Page</a> </li>
+        <li><a href="/admin/enrolment">Manage Enrolment Fees</a> </li>
+        <li><a href="/manageContactUs">Manage Contact Info</a> </li>
+      </ul>
+      
+      <li><a href="/add_news_event">Add Events</a> </li>
+      <li><a href="/add_gallery">Add Gallery Photos or Events Photos</a> </li>
+      <li><a href="/addChildParentList">Pick Up & Drop Off Approval</a> </li>
+      <li><a href="/admin/contactUs">Contact Form Data</a> </li>
+      <li><a href="/admin/feedback">Feedback Form Data</a> </li>
+    </h3></ul> 
+    </div>
+    
     </div>
 
       <%- include('partials/footer.ejs') %>

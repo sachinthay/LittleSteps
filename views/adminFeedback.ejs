@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+      <h1>Feedback Data</h1>
+      <table class="table table-dark">
+          <thead>
+              <tr>
+                 
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Feedback</th>
+                  <th>Date Submitted</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% data.forEach(feedback => { %>
+                  <tr>
+                     
+                      <td><%= feedback.First_Name %></td>
+                      <td><%= feedback.Last_Name || 'N/A' %></td>
+                      <td><%= feedback.Gender %></td>
+                      <td><%= feedback.Email %></td>
+                      <td><%= feedback.Feed %></td>
+                      <td><%= new Date(feedback.created_at).toLocaleString() %></td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+  
+    </div>
+
+      <%- include('partials/footer.ejs') %>
+  </body>
+</html>

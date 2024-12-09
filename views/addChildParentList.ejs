@@ -1,0 +1,103 @@
+<html>
+<head>
+  <%- include('partials/header1.ejs') %>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="content">
+    <h2>Pick up & Drop off List</h2>
+  
+    <br>
+
+    <div class="profile-container">
+     
+        <table class="table table-dark">
+          <tr>
+            <th>Child</th>
+            <th>Father/Guardian 1</th>
+            <th>Mother/Guardian 2</th>
+            <th>Authorized Person</th>
+            
+          </tr>
+          <% if (showData.length != 0) {var i = 1; showData.forEach(function(data){%>
+          <tr>
+            <td> 
+              <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Child_Picture %>" alt="Child Image" onclick="openLightbox(this)"> <br>
+                <%= data.Child_First_Name %> <%= data.Child_Last_Name %></td></div>
+              <td>
+                <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Father_Picture %>" alt="Father Image" onclick="openLightbox(this)"> <br>
+                <%= data.Father_First_Name %> <%= data.Father_Last_Name %></td></div>
+              <td>
+                <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Mother_Picture %>" alt="Mother Image" onclick="openLightbox(this)"> <br>
+                <%= data.Mother_First_Name %> <%= data.Mother_Last_Name %></td></div>
+                <!-- Check if there is an authorized person -->
+<% if (data.Authorized_Person_Reason) { %>
+  <td>
+    Reason = <%= data.Authorized_Person_Reason %> <br>
+    Name = <%= data.Authorized_Person_Name %> <br>
+    Relationship to Child: = <%= data.Authorized_Person_Relationship %> <br>
+    <img id="picturePreview" src="<%= data.Authorized_Person_Picture ? '/public/uploads/' + data.Authorized_Person_Picture : '' %>" alt="Profile Picture" width="100"><br>
+    Mobile = <%= data.Authorized_Person_Mobile %> <br>
+    <% if (data.Authorized_Person_Status === 'approved') { %>
+      <!-- Display the status as text if it's approved -->
+      <p><strong>Approved</strong></p>
+      <form action="/deletePerson" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+        <input type="hidden" name="id" value="<%= data.Authorized_Person_ID %>">
+        <input type="submit" value="Delete">
+      </form>
+    <% } else { %>
+      <form action="/approvePerson" method="post">
+        <select name="status" id="status" required>
+          <option value="" disabled selected>Please select one</option>
+          <option value="approved" <%= data.Authorized_Person_Status === 'approved' ? 'selected' : '' %>>Approved</option>
+          <option value="decline" <%= data.Authorized_Person_Status === 'decline' ? 'selected' : '' %>>Decline</option>
+          <option value="pending" <%= data.Authorized_Person_Status === 'pending' ? 'selected' : '' %>>Pending</option>
+        </select>
+        <br><br>
+        <input type="hidden" name="id" value="<%= data.Authorized_Person_ID %>">
+        <input type="submit" value="Update">
+      </form>
+     
+    <% } %>
+  </td>
+<% } else { %>
+  <!-- Optionally, display a message or leave the cell empty -->
+  <td>No authorized person added</td>
+<% } %>
+
+          </tr>
+
+          <% i++;})%> <%}%>
+        </table>
+      </form>
+       <!-- Lightbox Modal -->
+       <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightbox-image" alt="Full View">
+    </div>
+    </div>
+   
+
+  <%- include('partials/footer.ejs') %>
+
+ 
+</body>
+</html>
+
+<script>
+
+  function openLightbox(imgElement) {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      lightboxImage.src = imgElement.src;
+      lightbox.style.display = "flex";
+  }
+  
+  function closeLightbox() {
+      document.getElementById("lightbox").style.display = "none";
+  }
+  </script>

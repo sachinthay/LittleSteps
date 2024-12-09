@@ -1,29 +1,23 @@
 <html>
-  <head>
-    <%- include('partials/header1.ejs') %>
-  </head>
-  <body>
-    <%- include('partials/navbar1.ejs') %>
-    <div class="content">
-    <h1>About Little Steps</h1>
-<h2>The excitement of learning starts here…</h2>
-<h3>Little Steps accommodates only a limited number of children to ensure individualized attention to each, 
-  using a detailed and carefully structured academic curriculum. 
-  Its culture is devoted to helping each child grow towards independence in a safe and caring atmosphere 
-  while building confidence, competence, self esteem and respect for others. 
-  Our goal is to provide a supportive environment that allows children of a mixed age group to experience 
-  together the excitement of learning, while helping to guide them towards independent discovery and an 
-  early understanding of abstract reasoning. Children learn in keeping with their interests and abilities 
-  at their own unique pace in an inclusive environment.</h3>
-
-<h3>The child works in bright and cheerful classrooms equipped with recommended child care material of the best quality. 
-  He develops a variety of social and academic skills which will prepare him to enter the mainstream of primary education.</h3>
-
-<h3>Appreciation of music and art, nature and caring for the environment are all part of our curriculum at Little Steps.</h3>
-
-
-<img class="aboutpic" src="/public/images/about.png" alt="picture" width="80%"> 
-</div>
-<%- include('partials/footer.ejs') %>
-  </body>
+   <head>
+      <%- include('partials/header1.ejs') %>
+   </head>
+   <body>
+      <%- include('partials/navbar1.ejs') %>
+      <div class="content">
+         <h1><%= pageContent.find(item => item.Content_Type === '1').Content %></h1>
+         <h2><%= pageContent.find(item => item.Content_Type === '2').Content %></h2>
+         <h3><%= pageContent.find(item => item.Content_Type === '3').Content %></h3>
+         <h3><%= pageContent.find(item => item.Content_Type === '4').Content %></h3>
+         <h3><%= pageContent.find(item => item.Content_Type === '5').Content %></h3>
+         <img 
+            class="aboutpic" 
+            src="<%= pageContent.find(item => item.Content_Type === '6').Image_Url %>" 
+            alt="picture" 
+            width="80%">
+      </div>
+      <br>
+      <br>
+      <%- include('partials/footer.ejs') %>
+   </body>
 </html>

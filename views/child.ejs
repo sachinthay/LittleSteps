@@ -1,0 +1,126 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+
+
+    <div class="content">
+     
+        <h2>Children Profiles</h2>
+        
+        <% if (message) { %>
+          <div class="message"><%= message %></div>
+        <% } %>
+      
+        <% if (children.length > 0) { %>
+          <% children.forEach(function(child) { %>
+            <div class="profile-container">
+            <h3 style="text-align: center; font-weight: bold;"><%= child.First_Name %> <%= child.Last_Name %></h3>
+          
+           
+            <form action="/updateChild" method="post" enctype="multipart/form-data">
+              <table class="table table-striped">
+                <tr>
+                  <th>First Name:</th>
+                  <td><input type="text" name="first_name" value="<%= child.First_Name %>" required></td>
+                </tr>
+                <tr>
+                  <th>Last Name:</th>
+                  <td><input type="text" name="last_name" value="<%= child.Last_Name %>" required></td>
+                </tr>
+                <tr>
+                  <th>Gender:</th>
+                  <td>
+                    <select name="gender" required>
+                      <option value="Male" <%= child.Gender === 'Male' ? 'selected' : '' %>>Male</option>
+                      <option value="Female" <%= child.Gender === 'Female' ? 'selected' : '' %>>Female</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Date of Birth:</th>
+                  <td>
+                    <input type="date" name="dob" 
+                           value="<%= child.DOB.toLocaleDateString('en-CA') %>" 
+                           required>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Food Allergy:</th>
+                  <td><input type="text" name="food_allergy" value="<%= child.Food_Allergy %>"></td>
+                </tr>
+                <tr>
+                  <th>Picture:</th>
+                  <td>
+                    <img src="/public/uploads/<%= child.Picture %>" width="100"><br>
+                    <input type="file" name="picture">
+                    <input type="hidden" name="oldPicture" value="<%= child.Picture %>">
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align: right;">
+                    <input type="hidden" name="child_id" value="<%= child.ID %>">
+                    <input type="submit" value="Update" class="btn btn-success">
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+          <% }) %>
+        <% } else { %>
+         
+        <% } %>
+           
+
+        <div class="profile-container">
+        <h3 style="text-align: center; font-weight: bold;">Add New Child</h3>
+        <form action="/addChild" method="post" enctype="multipart/form-data">
+          <table class="table table-striped">
+            <tr>
+              <th>First Name:</th>
+              <td><input type="text" name="first_name" required></td>
+            </tr>
+            <tr>
+              <th>Last Name:</th>
+              <td><input type="text" name="last_name" required></td>
+            </tr>
+            <tr>
+              <th>Gender:</th>
+              <td>
+                <select name="gender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>Date of Birth:</th>
+              <td><input type="date" name="dob" required></td>
+            </tr>
+            <tr>
+              <th>Food Allergy:</th>
+              <td><input type="text" name="food_allergy"></td>
+            </tr>
+            <tr>
+              <th>Picture:</th>
+              <td><input type="file" name="picture"></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: right;">
+                <input type="submit" value="Add Child" class="btn btn-primary">
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+  
+
+
+
+    
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

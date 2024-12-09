@@ -1,58 +1,48 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <%- include('partials/header1.ejs') %>
-  </head>
-  <body>
-    <%- include('partials/navbar1.ejs') %>
-    <div class="content">
-    <div class="register">
-			<h1>Registration Form</h1>
-      <p>Please fill the following form.</p>
-
-			<form action="/registerUser" method="post">
-
-				<label for="firstName">First Name*:</label>
-				<input type="text" name="firstName" placeholder="First Name" required><br><br>
-		
-				<label for="lastName">Last Name*:</label>
-				<input type="text" name="lastName" placeholder="Last Name" required><br><br>
-		
-				<label for="gender">Gender*:</label>
-				<select name="gender" id="gender" required>
-						<option value="" disabled selected>Please select one</option>
-						<option value="male">Male</option>
-						<option value="female">Female</option>
-						<option value="noSay">Prefer not to Say</option>
-				</select><br><br>
-		
-				<label for="role">Role*:</label>
-				<select name="role" id="role" required>
-						<option value="" disabled selected>Please select one</option>
-						<option value="teacher">Teacher</option>
-						<option value="parent">Parent</option>
-				</select><br><br>
-		
-				<label for="email">Email*:</label>
-				<input type="email" name="email" placeholder="Email" required><br><br>  <!-- Fixed typo -->
-		
-				<label for="confirmEmail">Confirm Email*:</label>
-				<input type="email" name="confirmEmail" placeholder="Confirm Email" required><br><br>
-		
-				<label for="password">Password*:</label>
-				<input type="password" name="password" placeholder="Password" required><br><br>
-		
-				<label for="confirmPassword">Confirm Password*:</label>
-				<input type="password" name="confirmPassword" placeholder="Confirm Password" required><br><br>
-		
-				<input type="submit" value="Register">
-		
-		</form>
-		
-		<% if (message) { %>
-				<div style="color: blue; font-weight: bold;"><%= message %></div>
-		<% } %>
-		</div>
-    </div>
-      <%- include('partials/footer.ejs') %>
-  </body>
+<head>
+  <%- include('partials/header1.ejs') %>
+  <title></title>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+  <div class="register-container">
+    <h2>Registration Form</h2><%if (message) { %>
+    <div class="message">
+      <%= message %>
+    </div><%} %>
+    <p>Please fill the following form.</p>
+    <form action="/registerUser" method="post">
+      <label for="firstName">First Name*:</label> <input type="text" name="firstName" placeholder="First Name" required=""> <label for="lastName">Last Name*:</label> <input type="text" name="lastName" placeholder="Last Name" required=""> <label for="gender">Gender*:</label> <select name="gender" id="gender" required="">
+        <option value="" disabled selected>
+          Please select one
+        </option>
+        <option value="male">
+          Male
+        </option>
+        <option value="female">
+          Female
+        </option>
+        <option value="noSay">
+          Prefer not to Say
+        </option>
+      </select> <label for="role">Role*:</label> <select name="role" id="role" required="">
+        <option value="" disabled selected>
+          Please select one
+        </option>
+        <option value="teacher">
+          Teacher
+        </option>
+        <option value="parent">
+          Parent/Guardian
+        </option>
+      </select> <label for="email">Email*:</label> <input type="email" name="email" placeholder="Email" required=""> <label for="confirmEmail">Confirm Email*:</label> <input type="email" name="confirmEmail" placeholder="Confirm Email" required=""> <label for="password">Password*:</label> <input type="password" name="password" placeholder="Password" required=""> <label for="confirmPassword">Confirm Password*:</label> <input type="password" name="confirmPassword" placeholder="Confirm Password" required="">
+      <div>
+        <input type="submit" value="Register">
+      </div>
+    </form>
+  </div><br>
+  <br>
+  <%- include('partials/footer.ejs') %>
+</body>
 </html>

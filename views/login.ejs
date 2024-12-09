@@ -3,18 +3,26 @@
     <%- include('partials/header1.ejs')%>
   </head>
   <body>
-    <%- include('partials/navbar1.ejs')%>
-    <div class="content">
+    <%- include('partials/navbar1.ejs') %>
+    <br>
+    <div class="login-container">
       <h2>Login</h2>
-      <br>
-      <form action="/auth" method="post">
+    
+      <% if (typeof message !== 'undefined') { %>
+        <div class="message"><%= message %></div>
+      <% } %>
+      <form action="/login" method="post">
+        <label for="email">Email:</label>
         <input type="email" name="email" placeholder="Email" id="email" required>
-        <label for="password">
-        </label>
+        
+        <label for="password">Password:</label>
         <input type="password" name="password" placeholder="Password" id="password" required>
-        <input type="submit" value="Login">
+        
+        <div>
+          <input type="submit" value="Login">
+        </div>
       </form>
-     
     </div>
+    <%- include('partials/footer.ejs') %>
   </body>
 </html>

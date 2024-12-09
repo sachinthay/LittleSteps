@@ -1,41 +1,49 @@
-body  {
-  background-image: url("/public/images/bg22.jpg");
-  background-repeat: repeat;
- /* background-color: #d4e0d4;*/
-  color: black;
-  font-size: 20px;
-  background-size: 100%;
-  font-family: Amatic SC;
-}
-.content{
-  padding: 10px 50px;
-  margin-left: auto; 
-  margin-right: auto;
-  margin-bottom: 50px;
+
+/* General Reset for Headings */
+h1, h2, h3 {
+  margin: 0; /* Removes default margin */
+  padding: 10px; /* Adds padding for spacing */
+  text-align: center; /* Centers the text */
+  line-height: 1.5; /* Improves readability */
 }
 
-h1{
-  font-family: 'Cabin Sketch', display !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    font-size: 35px !important;
-    letter-spacing: 6px !important;
-    line-height: 1.5em !important;
+/* Specific Styles */
+h1 {
+ 
+  font-weight: bold; /* Bold for emphasis */
+  color: #ef0897; /* Primary blue color */
+  
+  padding-bottom: 10px; /* Space below the heading */
 }
-h2{
-  font-family: 'Cabin Sketch', display !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    font-size: 30px !important;
-    letter-spacing: 3px !important;
-    line-height: 1.5em !important;
+
+h2 {
+  color: #ca1f7a;
+  font-weight: bold;/* Semi-bold for hierarchy */
+  border-radius: 5px; /* Rounded edges */
+  padding: 15px; /* Adds spacing around the text */
 }
+
+h3 {
+  
+  font-weight: normal; /* Regular font weight */
+  color: #b4b1b1; /* Neutral color for less emphasis */
+ 
+  padding: 10px; /* Space around the heading */
+  margin-bottom: 10px; /* Separates it from other elements */
+}
+
+
+
 table {
-  font-family: arial, sans-serif;
+  font-family: ' Calibri','Arial', sans-serif;
   border-collapse: collapse;
   width: 80%;
   margin-left: auto; 
   margin-right: auto;
+}
+
+.table {
+  width: fit-content;
 }
 
 td, th {
@@ -56,18 +64,28 @@ table.center {
 }
 
 .logo{
-  height: 200px;
-  width: 200px;
+  height: 170px;
+  width: 170px;
   /*border-radius: 99%;*/
   margin-left: auto;
   margin-right: auto;
   display: block;
   background: transparent;
   
+  border-radius: 25px;
+  border: 2px solid #0b0404;
+  margin-bottom: 1px;
 }
 
 nav{
   text-align: center;
+  --bs-nav-link-hover-color: black;
+  --bs-nav-link-hover-color: black;
+}
+
+.nav {
+  list-style: none; /* Remove default list markers */
+  padding-left: 0; /* Reset padding */
 }
 
 .aboutpic{
@@ -78,7 +96,7 @@ nav{
 footer {
   text-align: center;
   padding: 3px;
-  background-color: rgb(106, 96, 93);
+  background-color: #252525;
   color: white;
   font-size: medium;
   position: fixed;
@@ -90,7 +108,7 @@ footer {
 /*///////////// Start Slide show ////////*/
 .slideshow-container {
   * {box-sizing: border-box;}
-body {font-family: Verdana, sans-serif;}
+
 .mySlides {display: none;}
 img {vertical-align: middle;}
 
@@ -163,53 +181,8 @@ img {vertical-align: middle;}
 /*///////////// End Slide show ////////*/
 
 /*/////////Contact Us////////*/
-.contact-container , .feedback-container{
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  
-}
 
-.contact-item {
-  margin: 25px 0;
-  display: flex;
-  align-items: center;
-}
 
-.contact-item i {
-  font-size: 24px;
-  color: black;
-  margin-right: 10px;
-}
-
-.contact-item strong {
-  font-size: 20px;
-  margin-right: 5px;
-}
-
-.contact-item p {
-  margin: 0;
-}
-
-.contact-item a {
-  text-decoration: none;
-  color: black;
-}
-
-.contact-item a:hover {
-  text-decoration: underline;
-}
-
-.map-container {
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 /*/////////End Contact Us////////*/
 
 .nav-link {
@@ -226,20 +199,19 @@ img {vertical-align: middle;}
   gap: 75px; /* Space between the containers */
 }
 
-.contact-container, .feedback-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+
+
+
+
+ .profile-container{
+  margin: auto;
+  width: max-content;
+}
+
+.profile-container{
   background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.contact-container {
-  justify-self: start; /* Align left */
-}
-
-.feedback-container {
-  justify-self: end; /* Align right */
+  font-family: 'Cabin Sketch','Arial', sans-serif;
+  display: inline;
 }
 /*/////////End contactform////////*/
 
@@ -258,3 +230,680 @@ img {vertical-align: middle;}
   font-size:large;
 }
 /*/////////End feedback button////////*/
+.dropdown a {
+  display: inline-block;  /* Make the links appear inline */
+  padding-right: 2px;     /* Optional: Adjust the spacing between the text and caret */
+}
+
+.dropdown-toggle {
+  padding-left: 1px;      /* Add some space between the "About Us" text and caret */
+}
+
+a{
+  color: white;
+}
+
+.buttn {
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content; /* Optional: This ensures the div has only as much width as needed */
+}
+
+.butn {
+  display: block;
+  margin: 0 auto;
+  background-color: #0b0404;
+  color: white;
+}
+
+.welcome-message {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 30px;
+  background-color: #454679;
+  color: white;
+  text-align: left;
+  border-radius: 30px;
+  border: none; /* Optional: remove border */
+  width: 20%; /* Adjust width to fit content */
+  display: inline-block; /* Ensure it shrinks to fit content */
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.responsive-textarea {
+  width: 100%;   /* Makes the textarea take 100% of the container's width */
+  height: 150px; /* Adjust height as needed */
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  padding: 10px; /* Optional padding */
+  font-size: 16px; /* Optional text size */
+}
+
+
+
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.gallery-item {
+  margin: 15px;
+  overflow: hidden; /* This is important to hide the part of the image that goes beyond the div when zoomed */
+  transition: transform 0.3s ease-in-out;
+}
+
+.gallery-item img {
+  width: 300px;
+  height: auto;
+  border: 1px solid #ccc;
+  transition: transform 0.3s ease; /* Smooth zoom effect */
+    cursor: pointer; /* Change cursor to pointer on hover */
+
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.gallery-item p {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Add zoom effect on hover */
+.gallery-item:hover img {
+  transform: scale(1.2); /* 20% zoom */
+}
+
+.gallery-item img:hover {
+  transform: scale(1.1);
+}
+
+.news-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event {
+  border: 1px solid #ccc;
+  padding: 20px;
+ margin-left: auto;
+ margin-right: auto;
+  width: 80%;
+  background-color: #f9f9f9;
+  color: black;
+}
+
+/* Calendar Styles */
+#calendar {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-days, .calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-days div, .calendar-dates div {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.calendar-date {
+  cursor: pointer;
+}
+
+.calendar-date.has-event {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.news-container {
+  margin-top: 20px;
+}
+
+.event {
+  margin-bottom: 50px;
+}
+
+.event-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.gallery-item {
+  margin: 10px;
+}
+
+.gallery-item img {
+  width: 150px;
+  height: auto;
+  border: 1px solid #ccc;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #eb069b; /* Adjust as needed */
+}
+.navbar-container {
+  display: contents;
+}
+
+.navbar.container-fluid{
+  display: flex;
+}
+
+.navbar{
+  margin-top: 5px;
+}
+
+.second-navbar .nav-link {
+  color: black !important; 
+  margin-top: 5px;
+  border-color: black;
+    border-width: 2px;
+}
+
+.camera-preview {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+}
+.capture-btn {
+  margin-top: 10px;
+}
+
+.image-preview {
+  width: 100%;
+  max-width: 200px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+}
+.upload-form {
+  margin-top: 20px;
+}
+
+
+
+
+.table.table-striped.table-dark td, 
+      .table.table-striped.table-dark th {
+        color: #f3eded; /* Gray text inside table */
+        font-size: large;
+      }
+
+
+
+
+
+      /* Contact Container Styling */
+      .contact-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #252525;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: left;
+      }
+
+
+      .contact-item {
+        margin-bottom: 20px;
+      }
+
+      .contact-item i {
+        color: #eb069b;
+        margin-right: 10px;
+      }
+
+      .contact-item strong {
+        font-size: 22px;
+      }
+
+      .contact-item p {
+        margin: 5px 0 0;
+      }
+
+      .contact-item a {
+        color: #eb069b;
+        text-decoration: none;
+      }
+
+      .contact-item a:hover {
+        text-decoration: underline;
+      }
+
+      /* Map Styling */
+      .map-container iframe {
+        width: 100%;
+        border: 0;
+        border-radius: 10px;
+        margin-top: 10px;
+      }
+
+      /* Form Container Styling */
+      .form-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #252525;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .form-container h2 {
+        text-align: center;
+        color: #eb069b;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="email"],
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        background-color: #444444;
+        color: #f0f0f0;
+        border: 1px solid #555555;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+      }
+
+      .form-actions input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #eb069b;
+        color: #252525;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      .form-actions input[type="submit"]:hover {
+        background-color: #eb069b;
+      }
+
+      /* Conditional Section Styling */
+      .conditional-section {
+        display: none;
+      }
+
+      /* Success or Error Messages */
+      .contact-container div[style*="color: white;"] {
+        background-color: #444444;
+        border: 1px solid #555555;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .contact-container, 
+      .form-container {
+        color: #dddddd;
+      }
+
+
+
+
+
+
+
+
+     
+     
+            /* Center the form container */
+            .register-container {
+              background-color: #252525;
+              padding: 20px;
+              margin: 30px auto;
+              border-radius: 10px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+              max-width: 500px;
+              text-align: left;
+            }
+      
+            /* Form Text */
+            .register-container p {
+              color: #cfcfcf;
+              text-align: center;
+              margin-bottom: 20px;
+            }
+      
+            /* Input and Select Fields */
+            .register-container label {
+              display: block;
+              margin-bottom: 5px;
+              font-weight: bold;
+              color: #f0f0f0;
+            }
+      
+            .register-container input, 
+            .register-container select {
+              width: 100%;
+              padding: 10px;
+              margin-bottom: 20px;
+              border: 1px solid #444444;
+              border-radius: 5px;
+              background-color: #444444;
+              color: #ffffff;
+            }
+      
+            .register-container input::placeholder {
+              color: #aaaaaa;
+            }
+      
+            /* Button Styles */
+            .register-container input[type="submit"] {
+              background-color: #eb069b;
+              color: #252525;
+              border: none;
+              cursor: pointer;
+              font-size: 16px;
+              font-weight: bold;
+              padding: 10px 20px;
+              border-radius: 5px;
+              width: 100%;
+              text-align: center;
+            }
+      
+            .register-container input[type="submit"]:hover {
+              background-color: #eb069b;
+            }
+      
+            /* Message Text */
+            .register-container div[style="color: blue; font-weight: bold;"] {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+
+
+      
+      /* Center the Login Container */
+      .login-container {
+        background-color: #252525;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: left;
+      }
+
+
+      /* Form Labels */
+      .login-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #f0f0f0;
+      }
+
+      /* Input Fields */
+      .login-container input[type="email"],
+      .login-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #444444;
+        border-radius: 5px;
+        background-color: #444444;
+        color: #ffffff;
+      }
+
+      .login-container input::placeholder {
+        color: #aaaaaa;
+      }
+
+      /* Submit Button */
+      .login-container input[type="submit"] {
+        background-color: #eb069b;
+        color: #252525;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .login-container input[type="submit"]:hover {
+        background-color: #eb069b;
+      }
+
+      /* Error Message Styling */
+      .login-container div[style="color: red; font-weight: bold;"] {
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .left-align-section ul li{
+        text-align: left;
+        font-size: 25px;
+      }
+
+
+      .table {
+        font-size: 18px; /* Adjust the size as desired */
+      }
+    
+      .table th {
+        font-size: 20px; /* Larger font for table headers */
+        font-weight: bold;
+      }
+    
+      .table td {
+        font-size: 18px; /* Font size for table data cells */
+      }
+
+      textarea, input[type="text"], input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 20px;
+      }
+  
+      /* Textarea styling */
+      textarea {
+        height: 80px; /* Adjust the height as needed */
+        resize: vertical; /* Allow vertical resize */
+      }
+
+      body {
+        background-image: url("/public/images/l2.jpg");
+        background-size: cover; /* Ensures the image covers the background */
+        background-repeat: no-repeat; /* Prevents tiling */
+        background-attachment: fixed; /* Keeps background fixed while scrolling */
+        color: black;
+        font-size: 20px;
+        font-family: 'Calibri', 'Arial', sans-serif;
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+        background-color: #e8adad;
+      }
+      
+      .content {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: rgba(37, 37, 37, 0.8); /* Darker background with transparency */
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+        border-radius: 10px;
+        border: 1px solid #444; /* Subtle border */
+      }
+      
+      /* Mobile responsiveness: Adjust for screens smaller than 600px */
+      @media only screen and (max-width: 600px) {
+        body {
+          font-size: 16px; /* Slightly smaller font size for smaller screens */
+        }
+      
+        .content {
+          width: 95%; /* Content takes up more width on smaller screens */
+          padding: 15px; /* Slightly less padding */
+        }
+      
+        h1, h2, h3, p {
+          font-size: 18px; /* Adjust header and paragraph font size */
+        }
+      }
+      
+      /* Tablet responsiveness: Adjust for screens smaller than 900px */
+      @media only screen and (max-width: 900px) {
+        body {
+          font-size: 18px; /* Adjust font size slightly for tablet devices */
+        }
+      
+        .content {
+          width: 90%; /* Content width slightly increased */
+          padding: 18px;
+        }
+      
+        h1, h2, h3, p {
+          font-size: 20px;
+        }
+      }
+      
+      /* Large Desktop screens: If you have extra-large screens, adjust accordingly */
+      @media only screen and (min-width: 1200px) {
+        body {
+          font-size: 22px; /* Adjust larger font size for larger screens */
+        }
+      
+        .content {
+          width: 80%; /* Slightly reduce content width */
+        }
+      
+        h1, h2, h3, p {
+          font-size: 24px; /* Adjust larger font size for headings */
+        }
+      }
+
+      footer p {
+        margin: 0; /* Removes default paragraph margin for a cleaner look */
+        font-size: medium; /* Ensures paragraph text is also small */
+      }
+
+      .uploaded-image {
+        max-width: 100px;
+        max-height: 100px;
+        display: block;
+        margin-bottom: 10px;
+      }
+      
+      .image-preview {
+        max-width: 100px;
+        max-height: 100px;
+        display: block;
+        margin-top: 10px;
+      }
+
+      .circle-badge {
+        display: inline-block;
+        background-color: red;       /* Circle background color */
+        color: white;                /* Text color */
+        font-size: 12px;             /* Font size for the number */
+        font-weight: bold;           /* Make the text bold */
+        width: 20px;                 /* Circle width */
+        height: 20px;                /* Circle height */
+        line-height: 20px;           /* Align text vertically */
+        text-align: center;          /* Align text horizontally */
+        border-radius: 50%;          /* Make the element a circle */
+        margin-left: 5px;            /* Add space between text and circle */
+      }
+
+      
+      .nav-link[data-toggle="tooltip"]:hover::after {
+        content: attr(title);  /* Display the title attribute as the tooltip */
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.7);  /* Dark background for the tooltip */
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        top: -30px;  /* Position the tooltip above the link */
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        z-index: 10;
+        font-size: 12px;
+      }
+
+      .message{
+        color: rgb(229, 38, 162); 
+        font-weight: bold;
+      }

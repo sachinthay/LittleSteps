@@ -1,0 +1,176 @@
+<html>
+<head>
+  <%- include('partials/header1.ejs') %>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="content">
+    <h2>How they eat their kai</h2>
+    <br>
+
+    <div class="profile-container">
+      <table class="table table-dark">
+        <tr>
+          <th>Child</th>
+          <th>Before Picture</th>
+          <th>After Picture</th>
+          <th>Note</th>
+        </tr>
+        
+        <% if (showData.length != 0) { showData.forEach(function(data) { %>
+        <tr>
+          <!-- Child Info -->
+          <td>
+            <div class="gallery-item">
+              <img src="<%= '/public/uploads/' + data.Picture %>" alt="Child Image" onclick="openLightbox(this)">
+              <br><%= data.First_Name %> <%= data.Last_Name %>
+            </div>
+          </td>
+
+          <!-- Before Kaai Upload -->
+          <td>
+            <form action="/uploadBeforeKai" method="post" enctype="multipart/form-data" class="upload-form">
+              <input type="hidden" name="childId" value="<%= data.ID %>">
+              
+              
+              <% if (data.Before_Picture) { %>
+               
+                <img src="/public/uploads/<%= data.Before_Picture %>" class="uploaded-image" alt="Before Picture" onclick="openLightbox(this)">
+                
+
+              <% } else { %>
+                <p>No image uploaded</p>
+              <% } %>
+              
+              <input type="file" name="beforeKaiImage" accept="image/*" onchange="previewImage(event, 'beforeKaiPreview<%= data.ID %>')" required>
+
+              <img id="beforeKaiPreview<%= data.ID %>" class="image-preview" alt="Preview">
+
+              <button type="submit">Upload</button>
+            </form>
+          </td>
+          
+
+          <!-- After Kaai Upload -->
+          <td>
+            <form action="/uploadAfterKai" method="post" enctype="multipart/form-data" class="upload-form">
+              <input type="hidden" name="childId" value="<%= data.ID %>">
+              
+              <% if (data.After_Picture) { %>
+                <img src="/public/uploads/<%= data.After_Picture %>" class="uploaded-image" alt="After Picture">
+              <% } else { %>
+                <p>No image uploaded</p>
+              <% } %>
+              
+              <input type="file" name="afterKaiImage" accept="image/*" onchange="previewImage(event, 'afterKaiPreview<%= data.ID %>')" required>
+              <img id="afterKaiPreview<%= data.ID %>" class="image-preview" alt="Preview">
+              <button type="submit">Upload</button>
+            </form>
+          </td>
+          
+
+          <!-- Note and Timestamp -->
+          <td>
+            <form action="/addNote" method="post">
+              <input type="hidden" name="childId" value="<%= data.ID %>">
+              <textarea name="note" data-child-id="<%= data.ID %>" required></textarea>
+              <button type="submit">Submit</button>
+            </form>
+            <% if (data.Note) { %>
+              <p><%= data.Note %></p>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %> 
+        <% } %>
+      </table>
+    </div>
+  </div>
+
+  <%- include('partials/footer.ejs') %>
+
+  <script>
+function previewImage(event, previewId) {
+    const input = event.target; // The file input element
+    const file = input.files[0]; // The selected file
+
+    if (file) {
+      const reader = new FileReader();
+
+      // When the file is read, update the preview image's `src`
+      reader.onload = function (e) {
+        const preview = document.getElementById(previewId); // Get the <img> element
+        if (preview) {
+          preview.src = e.target.result; // Set the `src` to the file's data URL
+        }
+      };
+
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  }
+
+    document.getElementById('pictureInput')?.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('picturePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    const FORM_RESET_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+
+  function resetFormAfterTimeout(childId) {
+    const storageKey = `formResetTime_${childId}`;
+
+    // Check if the reset time is already stored
+    const lastResetTime = localStorage.getItem(storageKey);
+
+    if (lastResetTime) {
+      const elapsedTime = Date.now() - parseInt(lastResetTime, 10);
+
+      if (elapsedTime >= FORM_RESET_INTERVAL) {
+        resetForm(childId);
+      } else {
+        // Schedule the reset
+        setTimeout(() => {
+          resetForm(childId);
+        }, FORM_RESET_INTERVAL - elapsedTime);
+      }
+    } else {
+      // Schedule the reset for the first time
+      localStorage.setItem(storageKey, Date.now());
+      setTimeout(() => {
+        resetForm(childId);
+      }, FORM_RESET_INTERVAL);
+    }
+  }
+
+  function resetForm(childId) {
+    const beforePreview = document.getElementById(`beforeKaiPreview${childId}`);
+    const afterPreview = document.getElementById(`afterKaiPreview${childId}`);
+    const noteField = document.querySelector(`textarea[name="note"][data-child-id="${childId}"]`);
+
+    if (beforePreview) beforePreview.src = '';
+    if (afterPreview) afterPreview.src = '';
+    if (noteField) noteField.value = '';
+
+    // Clear the reset time from storage
+    localStorage.removeItem(`formResetTime_${childId}`);
+    console.log(`Form for child ${childId} has been reset.`);
+  }
+
+  // Initialize reset logic for all children
+  document.addEventListener('DOMContentLoaded', () => {
+    const childForms = document.querySelectorAll('form');
+    childForms.forEach((form) => {
+      const childId = form.querySelector('input[name="childId"]').value;
+      resetFormAfterTimeout(childId);
+    });
+  });
+  </script>
+</body>
+</html>

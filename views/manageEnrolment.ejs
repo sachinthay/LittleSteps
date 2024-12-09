@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content"> 
+      <h2>Enrolment</h2>
+      <h2>Fees</h2>
+      <table class="table table-hover">
+        <tr> 
+          <th>Age limits =></th>
+          <th colspan="2">Under 3 years old</th>
+          <th colspan="2">Over 3 years old</th>
+        </tr>
+        <tr>
+          <th>Days</th>
+          <th>* Short Day</th>
+          <th>**Long Day</th>
+          <th>*Short Day</th>
+          <th>**Long Day (With 20 hours ECE attestation)</th>
+        </tr>
+        <% feesData.forEach(fee => { %>
+          <tr>
+            <td><%= fee.day_count %></td>
+            <td><%= fee.short_day_fee_under_3 %></td>
+            <td><%= fee.long_day_fee_under_3 %></td>
+            <td><%= fee.short_day_fee_over_3 %></td>
+            <td><%= fee.long_day_fee_over_3 %></td>
+          </tr>
+        <% }) %>
+      </table>
+      <br>
+      <div class="left-align-section">
+        <h3>
+          <ul>
+            <% enrollmentDetails.forEach(detail => { %>
+              <li><%= detail %></li>
+            <% }); %>
+          </ul>
+        </h3>
+      </div>
+      <!-- Add Fee Management Section (Admin only) -->
+      <h3>Manage Fees</h3>
+      <form action="/updateFees" method="POST">
+        <table>
+          <thead>
+            <tr>
+              <th>Days</th>
+              <th>Short Day Fee (Under 3 years)</th>
+              <th>Long Day Fee (Under 3 years)</th>
+              <th>Short Day Fee (Over 3 years)</th>
+              <th>Long Day Fee (Over 3 years)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% feesData.forEach(fee => { %>
+              <tr>
+                <td><%= fee.day_count %></td>
+                <td><input type="text" name="short_day_fee_under_3_<%= fee.id %>" value="<%= fee.short_day_fee_under_3 %>"></td>
+                <td><input type="text" name="long_day_fee_under_3_<%= fee.id %>" value="<%= fee.long_day_fee_under_3 %>"></td>
+                <td><input type="text" name="short_day_fee_over_3_<%= fee.id %>" value="<%= fee.short_day_fee_over_3 %>"></td>
+                <td><input type="text" name="long_day_fee_over_3_<%= fee.id %>" value="<%= fee.long_day_fee_over_3 %>"></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <button type="submit">Update Fees</button>
+      </form>
+      
+      <div class="left-align-section">
+        <h3>Enrollment Details</h3>
+        <form action="/updateEnrollmentDetails" method="POST">
+          <ul>
+            <% enrollmentDetails.forEach((detail, index) => { %>
+              <li>
+                <input type="text" name="detail_<%= index %>" value="<%= detail %>">
+              </li>
+            <% }); %>
+          </ul>
+          <button type="submit">Update Details</button>
+        </form>
+      </div>
+      
+
+    </div>
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

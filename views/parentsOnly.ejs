@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/header1.ejs') %>
+  <title></title>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+  <div class="content">
+    <h1>Parent Portal</h1>
+    <h2>What you can do -</h2>
+    <div class="left-align-section">
+      <ul>
+        <li>
+          <a href="parentProfile">Update My Profile</a>
+        </li>
+        <li>
+          <a href="child">Add/ Edit Child Profile</a>
+        </li>
+        <li>
+          <%if (!hasPartner) { %><a href="addPartner">Add Partner</a> <%} else { %> <span>Partner Already Added</span> <%} %>
+        </li>
+        <li>
+          <a href="">Messages</a>
+        </li>
+        <ul>
+          <li>
+            <a href="parentSendMsg">Compose Mail & History</a>
+          </li>
+          <li>
+            <a href="parentInbox">Inbox</a>
+          </li>
+        </ul>
+        <li>
+          <a href="addNew">Add Authorized Person - Pick Up or Drop Off</a>
+        </li>
+      </ul>
+    </div>
+  </div><%- include('partials/footer.ejs') %>
+</body>
+</html>

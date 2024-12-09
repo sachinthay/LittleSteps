@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+      <div class="profile-container">
+        <h2>Add Partner</h2>
+        <% if (message) { %>
+          <div class="message"><%= message %></div>
+        <% } %>
+        <br>
+
+        <form action="/addPartner" method="post" enctype="multipart/form-data">
+          <table class="table table-dark">
+            <tr>
+              <th>Attributes</th>
+              <th>Values</th>
+            </tr>
+            <tr>
+              <th>First Name:</th>
+              <td>
+                <input type="text" name="first_name"  required>
+              </td>
+            </tr>
+            <tr>
+              <th>Last Name:</th>
+              <td>
+                <input type="text" name="last_name"  required>
+              </td>
+            </tr>
+            <tr>
+              <th>Email:</th>
+              <td>
+                <input type="email" name="email"  required>
+              </td>
+            </tr>
+            <tr>
+              <th>Gender:</th>
+              <td>
+                <select name="gender" id="gender" required>
+                  <option value="" disabled selected>Please select one</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>Role:</th>
+              <td>
+                <select name="role" id="role" required>
+                  <option value="parent">Parent/ Guardian</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Picture</th>
+              <td>
+                <!-- Initially, no image preview if it's a first-time upload -->
+                <img id="picturePreview" src="" alt="Profile Picture" width="100" style="display:none;">
+                
+                <!-- File input for uploading a new picture -->
+                <input type="file" name="picture" accept="image/*" id="pictureInput">
+              </td>
+            </tr>
+            
+            <script>
+              // Listen for changes in the file input
+              document.getElementById('pictureInput').addEventListener('change', function(event) {
+                const file = event.target.files[0];  // Get the selected file
+                if (file) {
+                  const reader = new FileReader();  // FileReader to read the image data
+                  reader.onload = function(e) {
+                    const preview = document.getElementById('picturePreview');
+                    preview.src = e.target.result;  // Set the image preview source
+                    preview.style.display = 'block';  // Show the image if it was hidden
+                  };
+                  reader.readAsDataURL(file);  // Read the image file as a data URL
+                }
+              });
+            </script>
+
+            <!-- Relationship to child -->
+            <tr>
+              <th>Relationship to child:</th>
+              <td>
+                <select name="relationship" id="relationship" required>
+                  <option value="" disabled selected>Please select one</option>
+                  <option value="Father">Father</option>
+                  <option value="Mother">Mother</option>
+                  <option value="Guardian 1" >Guardian 1</option>
+                  <option value="Guardian 2" >Guardian 2</option>
+                </select>
+              </td>
+            </tr>
+
+            <!-- Occupation -->
+            <tr>
+              <th>Occupation:</th>
+              <td>
+                <input type="text" name="occupation" >
+              </td>
+            </tr>
+
+            <!-- Mobile -->
+            <tr>
+              <th>Mobile:</th>
+              <td>
+                <input type="text" name="mobile" >
+              </td>
+            </tr>
+
+            <!-- Address -->
+            <tr>
+              <th>Address:</th>
+              <td>
+                <input type="text" name="address">
+              </td>
+            </tr>
+           
+            <tr>
+              <td colspan="2" style="text-align: right;">
+                <div style="text-align:right;">
+                  <input type="submit" value="Add Partner" class="btn btn-success">
+                </div>
+              </td>
+            </tr>
+
+          </table>
+        </form>
+
+      </div>
+    </div>
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<html>
+<head>
+  <%- include('partials/header1.ejs') %>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="content">
+    <h2>Pick up & Drop off List</h2>
+  
+    <br>
+
+    <div class="profile-container">
+      <form action="/addPerson" method="post">
+        <table class="table table-dark">
+          <tr>
+            <th>Child</th>
+            <th>Father/Guardian 1</th>
+            <th>Mother/Guardian 2</th>
+            <th>Authorized Person</th>
+            
+          </tr>
+          <% if (showData.length != 0) {var i = 1; showData.forEach(function(data){%>
+          <tr>
+            <td> 
+              <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Child_Picture %>" alt="Child Image" onclick="openLightbox(this)"> <br>
+                <%= data.Child_First_Name %> <%= data.Child_Last_Name %></td></div>
+              <td>
+                <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Father_Picture %>" alt="Father Image" onclick="openLightbox(this)"> <br>
+                <%= data.Father_First_Name %> <%= data.Father_Last_Name %></td></div>
+              <td>
+                <div class="gallery-item">
+                <img src="<%= '/public/uploads/' + data.Mother_Picture %>" alt="Mother Image" onclick="openLightbox(this)"> <br>
+                <%= data.Mother_First_Name %> <%= data.Mother_Last_Name %></td></div>
+                <td>
+                  <% if (data.Authorized_Person_Reason) { %>
+                    <div class="gallery-item">
+                      <% 
+                        const personNames = data.Authorized_Person_Name ? data.Authorized_Person_Name.split(',') : [];
+                        const personRelationships = data.Authorized_Person_Relationship ? data.Authorized_Person_Relationship.split(',') : [];
+                        const personPictures = data.Authorized_Person_Picture ? data.Authorized_Person_Picture.split(',') : [];
+                        const personStatuses = data.Authorized_Person_Status ? data.Authorized_Person_Status.split(',') : [];
+                
+                        let hasApproved = false; // Flag to check if there is any approved person
+                
+                        for (let i = 0; i < personStatuses.length; i++) {
+                          if (personStatuses[i] === 'approved') {
+                            hasApproved = true;
+                      %>
+                        <img src="<%= '/public/uploads/' + personPictures[i] %>" alt="Authorized Person Image" onclick="openLightbox(this)"> <br>
+                        <%= personNames[i] %> (<%= personRelationships[i] %>) <br>
+                      <% 
+                          }
+                        }
+                
+                        if (!hasApproved) {
+                      %>
+                        Admin has not approved authorized person yet.
+                      <% } %>
+                    </div>
+                  <% } else { %>
+                    No authorized person added.
+                  <% } %>
+                </td>
+                
+          </tr>
+
+          <% i++;})%> <%}%>
+        </table>
+      </form>
+       <!-- Lightbox Modal -->
+       <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightbox-image" alt="Full View">
+    </div>
+    </div>
+   
+
+  <%- include('partials/footer.ejs') %>
+
+ 
+</body>
+</html>
+
+<script>
+
+  function openLightbox(imgElement) {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      lightboxImage.src = imgElement.src;
+      lightbox.style.display = "flex";
+  }
+  
+  function closeLightbox() {
+      document.getElementById("lightbox").style.display = "none";
+  }
+  </script>

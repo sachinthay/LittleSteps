@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+
+
+    <div class="content">
+     
+        <h2>Send messages</h2>
+      
+        <% if (message) { %>
+          <div class="message"><%= message %></div>
+        <% } %>
+      
+         
+        <div class="profile-container">
+      
+        <form action="/parentSendMsg" method="post" >
+          <table class="table table-dark">
+
+            <tr>
+              <th>Teacher/Center:</th>
+              <td>
+                <select name="receiver" required>
+                  <option value="">Please select one</option>
+                  <option value="admin@gmail.com">Center Admin</option>
+                  <% teachers.forEach(function(teacher) { %>
+                    <option value="<%= teacher.Email %>"><%= teacher.First_Name %> <%= teacher.Last_Name %></option>
+                  <% }) %>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>Topic:</th>
+              <td> <select name="topic" required>
+                <option value="">Please select one</option>
+                <option value="absent">Absent</option>
+                <option value="meet">Need to meet teacher</option>
+                <option value="complain">Complain</option>
+                <option value="comment">Comment</option>
+                <option value="suggession">Suggession</option>
+                <option value="other">Other</option>
+              </select>
+            </td>
+            </tr>
+            <tr>
+              <th>About my child:</th>
+              <td>
+                <% children.forEach(function(child) { %>
+                  <div>
+                    <input type="radio" name="child" id="child_<%= child.ID %>" value="<%= child.ID %>" >
+                    <label for="child_<%= child.ID %>"><%= child.First_Name %></label>
+                  </div>
+                <% }) %>
+              </td>
+            </tr>
+           
+            <tr>
+              <th>Message:</th>
+              <td><textarea name="message" class="responsive-textarea"></textarea></td>
+            </tr>
+            
+            <tr>
+              <td colspan="2" style="text-align: right;">
+                <input type="submit" value="Send" class="btn btn-primary">
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      <div class="profile-container">
+        <h1>History</h1>
+    
+        <table class="table table-dark">
+          <tr>
+            <th>Teacher</th>
+            <th>Child</th>
+            <th>Topic</th>
+            <th>Message</th>
+            <th>Feedback</th>
+            <th>Delete</th>
+           
+          </tr>
+    
+        <% if (manageMsgData.length != 0) {var i = 1; manageMsgData.forEach(function(data){%>
+          <tr>
+            <td><%= data.Teacher_First_Name %> <%= data.Teacher_Last_Name %></td>
+            <td><%= data.Child_First_Name %> <%= data.Child_Last_Name %></td>
+            <td><%=data.Topic %></td>
+            <td><%=data.Message %></td>
+
+            <td>
+              <% if (data.Feedback === '' || data.Feedback === null) { %>
+                No Response Yet
+              <% } else { %>
+                <%= data.Feedback %>
+              <% } %>
+            </td>
+    
+            <td>
+            
+              <form action="/deleteSendMsg" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                <input type="hidden" name="id" value="<%= data.ID %>">
+                <input type="submit" value="Delete">
+              </form>
+         
+            </td>
+          </tr>
+        <% i++;})%> <%}%>
+        
+      </table>
+    
+     
+        </div>
+
+
+
+    </div>
+
+
+
+    
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

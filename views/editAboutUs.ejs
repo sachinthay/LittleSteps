@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+      <h1>Edit About Us Content</h1>
+      
+      <form action="/editAboutUs" method="POST" enctype="multipart/form-data">
+        <!-- Editable fields for each content type -->
+        <label for="content1">Title:</label><br>
+        <input type="text" id="content1" name="content1" value="<%= pageContent.find(item => item.Content_Type === '1').Content %>">
+        <br>
+        <label for="content2">Subtitle:</label><br>
+        <input type="text" id="content2" name="content2" value="<%= pageContent.find(item => item.Content_Type === '2').Content %>">
+        <br>
+        <label for="content3">Description:</label><br>
+        <textarea id="content3" name="content3"><%= pageContent.find(item => item.Content_Type === '3').Content %></textarea>
+        <br>
+        <label for="content4">Extra Info 1:</label><br>
+        <input type="text" id="content4" name="content4" value="<%= pageContent.find(item => item.Content_Type === '4').Content %>">
+        <br>
+        <label for="content5">Extra Info 2:</label><br>
+        <input type="text" id="content5" name="content5" value="<%= pageContent.find(item => item.Content_Type === '5').Content %>">
+        <br>
+        <label for="aboutpic">Upload Image:</label><br>
+        <img id="picturePreview" src="<%= pageContent.find(item => item.Content_Type === '6').Image_Url %>" alt="Picture" width="100"><br>
+        <br><br>
+        <button type="submit">Save Changes</button>
+      </form>
+      <script>
+        document.getElementById('pictureInput')?.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              document.getElementById('picturePreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      </script>
+    </div>
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

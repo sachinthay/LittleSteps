@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <%- include('partials/header1.ejs') %>
+  </head>
+  <body>
+    <%- include('partials/navbar1.ejs') %>
+    <div class="content">
+    <h1>Register Approval</h1>
+
+    <% if (typeof message !== 'undefined') { %>
+      <div class="message"><%= message %></div>
+    <% } %>
+
+
+    <form action="/registerApproval" method="GET" id="filterForm">
+      <label for="role">Filter by Role:</label>
+      <select name="role" id="role" onchange="document.getElementById('filterForm').submit();">
+        <option value="">All</option>
+        <option value="admin" <%= selectedRole === 'admin' ? 'selected' : '' %>>Admin</option>
+        <option value="teacher" <%= selectedRole === 'teacher' ? 'selected' : '' %>>Teacher</option>
+        <option value="parent" <%= selectedRole === 'parent' ? 'selected' : '' %>>Parent</option>
+      </select>
+
+      <label for="status">Filter by Status:</label>
+      <select name="status" id="status" onchange="document.getElementById('filterForm').submit();">
+        <option value="">All</option>
+        <option value="approved" <%= selectedStatus === 'approved' ? 'selected' : '' %>>Approved</option>
+        <option value="pending" <%= selectedStatus === 'pending' ? 'selected' : '' %>>Pending</option>
+        <option value="decline" <%= selectedStatus === 'decline' ? 'selected' : '' %>>Declined</option>
+      </select>
+    </form>
+
+ <table class="table table-dark">
+   
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Gender</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Update Status</th>
+        <th>Delete</th>
+      </tr>
+
+    <% if (manageUserData.length != 0) {var i = 1; manageUserData.forEach(function(data){%>
+      <tr>
+        <td><%=data.First_Name %></td>
+        <td><%=data.Last_Name %></td>
+        <td><%=data.Gender %></td>
+        <td><%=data.Role %></td>
+        <td><%=data.Email %></td>
+        <td><%=data.Status %></td>
+
+        <td>
+         <% if (data.Status === 'approved') { %>
+  <!-- Display the status as text if it's approved -->
+          Approved
+          <% } else { %>
+  <!-- Show the dropdown for other statuses -->
+            <form action="/approveUser" method="post">
+          <select name="status" id="status" required>
+              <option value="approved" <%= data.Status === 'approved' ? 'selected' : '' %>>Approved</option>
+              <option value="decline" <%= data.Status === 'decline' ? 'selected' : '' %>>Decline</option>
+              <option value="pending" <%= data.Status === 'pending' ? 'selected' : '' %>>Pending</option>
+            </select>
+            <br><br> 
+           <input type="hidden" name="email" value="<%= data.Email %>">
+            <input type="submit" value="Update">
+          </form>
+        <% } %>
+        </td>
+
+        <td>
+        
+          <form action="/deleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+            <input type="hidden" name="email" value="<%= data.Email %>">
+            <input type="submit" value="Delete">
+          </form>
+        
+        </td>
+      </tr>
+    <% i++;})%> <%}%>
+    
+  </table>
+
+ 
+    </div>
+
+      <%- include('partials/footer.ejs') %>
+  </body>
+</html>
