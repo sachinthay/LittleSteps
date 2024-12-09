@@ -97,8 +97,8 @@
               Messages
             </a>
             <div class="dropdown-menu" aria-labelledby="managePagesLink">
-              <a class="dropdown-item <%= currentPath === '/teacherMsg' ? 'active' : '' %>" href="/teacherMsg">Compose Mail & History</a>
-              <a class="dropdown-item <%= currentPath === '/teacherViewMsg' ? 'active' : '' %>" href="/teacherViewMsg">Inbox</a>
+              <a class="dropdown-item <%= currentPath === '/teacherSendMsg' ? 'active' : '' %>" href="/teacherSendMsg">Compose Mail & History</a>
+              <a class="dropdown-item <%= currentPath === '/teacherInbox' ? 'active' : '' %>" href="/teacherInbox">Inbox</a>
             </div>
           </li>
           <li class="nav-item">
@@ -125,7 +125,7 @@
               href="<%= hasPartner ? '#' : '/addPartner' %>" 
               <%= hasPartner ? 'onclick="return false;"' : '' %> 
               data-toggle="tooltip" 
-              title="<%= hasPartner ? 'Already added partner' : '' %>">
+              title="<%= hasPartner ? 'Partner Already Added' : '' %>">
               Add Partner
             </a>
           </li>

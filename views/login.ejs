@@ -9,7 +9,7 @@
       <h2>Login</h2>
     
       <% if (typeof message !== 'undefined') { %>
-        <div style="color: red; font-weight: bold;"><%= message %></div>
+        <div class="message"><%= message %></div>
       <% } %>
       <form action="/login" method="post">
         <label for="email">Email:</label>

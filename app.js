@@ -5,7 +5,7 @@ var conn = require('./dbConfig');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
-const saltRounds = 10; // Number of salt rounds for bcrypt
+const saltRounds = 10; 
 
 const multer = require('multer');
 const path = require('path');
@@ -75,11 +75,10 @@ function getTitleAndName(firstName, lastName, gender) {
   } else {
     title = '';  // Default if gender is not provided
   }
-  // Ensure firstName and lastName are defined
+ 
   const first = firstName ;
   const last = lastName ;
 
-  // Generate initials (e.g., "J. D." if "John Doe")
   const name = `${first} ${last}`;
 
   return `${title} ${name}`;
@@ -90,7 +89,6 @@ app.use((req, res, next) => {
   if (req.session.loggedin) {
     // User is logged in, set userTitleAndName and userRole
     const titleAndName = getTitleAndName(req.session.firstName, req.session.lastName, req.session.gender);
-
     // Store values in res.locals so they are accessible in all views
     res.locals.userTitleAndName = titleAndName;
     res.locals.userRole = req.session.userRole;
@@ -99,7 +97,6 @@ app.use((req, res, next) => {
     res.locals.userTitleAndName = '';
     res.locals.userRole = 'guest';
   }
-
   next();  // Continue to the next middleware or route handler
 });
 
@@ -125,16 +122,12 @@ app.get('/', (req, res) => {
   let query1 = "SELECT * FROM pages WHERE Name = 'home'";
   let query2 = "SELECT * FROM slideshow";
 
-  // Fetch content and slideshow data
   conn.query(query1, (err, contentResult) => {
     if (err) throw err;
 
     conn.query(query2, (err, slideshowResult) => {
       if (err) throw err;
 
-     
-
-        // Render the page with the fetched data
         res.render('home', {
           homepageContent: contentResult,
           slideshow: slideshowResult
@@ -148,12 +141,9 @@ app.get('/', (req, res) => {
 app.get('/aboutUs', (req, res) => {
   let query = "SELECT * FROM pages";
 
-
-  // Fetch content and slideshow data
   conn.query(query, (err, contentResult) => {
     if (err) throw err;
 
-      // Render the page with the fetched data
       res.render('aboutUs', {
         pageContent: contentResult
       });
@@ -181,7 +171,7 @@ app.get('/enrolment', function(req, res) {
 });
 
 app.get('/admin/enrolment', (req, res) => {
-  // Fetch both enrollment details and fees
+  
   conn.query('SELECT * FROM EnrollmentDetails', (err, detailResults) => {
     if (err) {
       console.error("Error fetching enrollment details:", err);
@@ -194,7 +184,6 @@ app.get('/admin/enrolment', (req, res) => {
         return res.status(500).send("Error fetching enrolment fees");
       }
 
-      // Render the page with both sets of data
       res.render('adminEnrolment', {
         feesData: feeResults,
         enrollmentDetails: detailResults.map(row => row.detail) // Extract details as an array
@@ -204,11 +193,9 @@ app.get('/admin/enrolment', (req, res) => {
 });
 
 
-// Handle fee update request
 app.post('/updateFees', (req, res) => {
   const updatedFees = [];
 
-  // Parse req.body into an array of fee objects
   Object.keys(req.body).forEach(key => {
     const [field, id] = key.split('__'); // Split by the new delimiter `__`
 
@@ -250,7 +237,6 @@ app.post('/updateFees', (req, res) => {
     });
   });
 
-  // Redirect to enrolment page
   res.redirect('/admin/enrolment');
 });
 
@@ -398,7 +384,7 @@ app.post('/login', function (req, res) {
             res.render('login', { message: 'Your account is pending approval by an admin.' });
           }
         } else {
-          res.render('login', { message: 'Invalid email or password.' });
+          res.render('login', { message: 'Invalid Password. Please enter correct Password.' });
         }
       } else {
         res.render('login', { message: 'No user found with this email.' });
@@ -594,10 +580,11 @@ app.post('/updateContactInfo', (req, res) => {
           console.error('Error updating contact info:', err);
           res.status(500).send('Failed to update contact info.');
       } else {
-          res.send('Contact information updated successfully!');
+          res.redirect('/manageContactUs'); // Redirect to the /contactUs route
       }
   });
 });
+
 
 
 // POST submitFeedbackForm - Handles feedback form submission
@@ -646,14 +633,13 @@ app.get('/manageUser', function (req, res) {
     const message = req.query.message; // Retrieve any message passed in the query
 
     // Query to fetch users
-    const fetchUsersSql = "SELECT * FROM users";
+    const fetchUsersSql = "SELECT * FROM users ORDER BY created_at DESC";
 
     conn.query(fetchUsersSql, function (err, result) {
       if (err) {
         console.error("Error fetching users:", err);
         return res.status(500).send("Internal Server Error");
       }
-
       // Render the manageUser page with data and the pending count from res.locals
       res.render('manageUser', {
         title: 'Manage User',
@@ -678,13 +664,11 @@ app.get('/registerApproval', (req, res) => {
 
   let sql = 'SELECT * FROM users WHERE 1=1'; // Start with a default condition
   const params = [];
-
   // Add role filter if selected
   if (selectedRole) {
     sql += ' AND Role = ?';
     params.push(selectedRole);
   }
-
   // Add status filter if selected
   if (selectedStatus) {
     sql += ' AND Status = ?';
@@ -706,11 +690,6 @@ app.get('/registerApproval', (req, res) => {
   });
 });
 
-
-
-
-
-
       // POST approveUser - Admin can approve or change user status
 app.post('/approveUser', function(req, res) {
   if (req.session.loggedin && req.userRole === 'admin') {
@@ -731,7 +710,7 @@ app.post('/approveUser', function(req, res) {
         res.render('manageUser', { 
           title: 'Manage User',
           manageUserData: users,
-          message: 'User approval updated!',
+          message: 'User Status updated Successfully.',
           userRole: req.userRole,
           selectedRole: '',// Use userRole from middleware
           selectedStatus:''
@@ -756,7 +735,7 @@ app.post('/deleteUser', function(req, res) {
       }
 
       // After deletion, fetch the updated user list
-      const fetchUsersSql = 'SELECT * FROM users';
+      const fetchUsersSql = 'SELECT * FROM users ORDER BY created_at DESC';
       conn.query(fetchUsersSql, (err, users) => {
         if (err) {
           return res.status(500).send('Error fetching users: ' + err);
@@ -987,7 +966,6 @@ app.get('/parentProfile', function(req, res) {
     const message = req.query.message;  // Retrieve the message from the query string, if any
     const email = req.session.email;
 
-    
     // Query to get the parent's profile
     conn.query("SELECT * FROM parent AS p INNER JOIN users AS u ON p.Email = u.Email WHERE p.Email = ?", [email], function(err, result) {
       
@@ -1315,61 +1293,7 @@ app.get('/child', (req, res) => {
   }
 });
   
-app.get('/childn', function(req, res) {
-  if (req.session.loggedin && req.userRole === 'parent') {
-    const message = req.query.message;  // Retrieve the message from the query string, if any
-    const email = req.session.email;
-    // Log session email for debugging
-    console.log("Session email in Child Profile:", email); 
 
-    // Query to get the child's profile
-    conn.query("SELECT * FROM child AS c INNER JOIN parent_child AS pc ON c.ID = pc.Child_ID WHERE pc.Parent_Email = ?", [email], function(err, result) {
-    //  console.log("Query result:", result);
-      
-      if (err) {
-        console.error("Error fetching profile:", err); 
-        return res.render('child', { 
-          //userRole: req.userRole, 
-          message: 'Error fetching profile data',
-          data: null,
-          editMode: false,  // No data to show in case of an error
-        });
-      }
-      if (result.length === 0) {
-        res.render('child', { 
-          title: 'Update child Profile',
-          data: {  // Create a data object that includes user data
-          First_Name:'' ,
-          Last_Name: '',
-            Gender:'' ,
-            DOB: '', // Default or placeholder if not applicable
-            Picture: '', // Default or placeholder if not applicable
-            Food_Allergy: '' // Default or placeholder if not applicable
-          },
-          message: message,
-          userRole: req.userRole,
-          email: email,
-          editMode:false, 
-        });
-      }
-      else{
-      // Render the profile with the fetched child data
-      res.render('child', { 
-        title: 'Child Profile',
-        data: result[0],  // Assuming we only need the first result
-        message: message,
-       // userRole: req.userRole,
-        email: email,
-        editMode: false, 
-      });
-    }
-    });
-  } else if (!req.session.loggedin) {
-    res.redirect('/login');  // Redirect to login if not logged in
-  } else {
-    res.send('Access denied: Parent only');  // If user is not a parent
-  }
-});
 
 app.get('/editChild', function(req, res) {
   if (req.session.loggedin && req.userRole === 'parent') {
@@ -1570,7 +1494,8 @@ app.get('/parentSendMsg', function(req, res) {
                       c.Last_Name AS Child_Last_Name, 
                       m.Topic, 
                       m.Message,
-                      m.Feedback
+                      m.Feedback,
+                       m.ID
                FROM message m
                JOIN users u ON m.Receiver = u.Email
                JOIN child c ON m.Child = c.ID
@@ -1624,7 +1549,7 @@ app.post('/parentSendMsg', function(req, res) {
    
 
 
-app.get('/teacherViewMsg', function(req, res) {
+app.get('/teacherInbox', function(req, res) {
   if (req.session.loggedin && req.userRole === 'teacher') {
     const message = req.query.message;
     const email = req.session.email; 
@@ -1641,11 +1566,12 @@ app.get('/teacherViewMsg', function(req, res) {
        JOIN users u ON m.Sender = u.Email
        JOIN child c ON m.Child = c.ID
        JOIN parent p ON m.Sender = p.Email
-       WHERE m.Receiver = ?`, [email], 
+       WHERE m.Receiver = ?
+       ORDER BY m.created_at DESC`, [email], 
       function(err, result) {
         if (err) throw err;
       
-        res.render('teacherViewMsg', { 
+        res.render('teacherInbox', { 
           title: 'Manage User',
           manageMsgData: result,
           message: message,  
@@ -1774,9 +1700,6 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
     const Email = req.session.email;
     const { first_name, last_name, email, gender, role, relationship, occupation, mobile, address } = req.body;
 
-    // Log the request body and file
-   // console.log('Received form data:', req.body);
-   // console.log('Uploaded file:', req.file);
 
     let picture = req.file ? req.file.filename : null;
   //  console.log("Step 1: All data extracted");
@@ -1787,7 +1710,8 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
       conn.query(sql1, [first_name, last_name, gender, role, email, 'pending'], (err, result) => {
         if (err) {
           console.error('Error inserting partner:', err);
-          return res.redirect('/addPartner?message=Error adding partner.');
+          //return res.redirect('/addPartner?message=');
+          res.render('addPartner', { message: 'Error adding partner.' });
         }
       //  console.log("Step 2: User inserted");
 
@@ -1795,7 +1719,8 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
         conn.query(sql2, [email, relationship, occupation, mobile, address, picture], (err, result) => {
           if (err) {
             console.error('Error inserting parent:', err);
-            return res.redirect('/addPartner?message=Error adding parent.');
+           // return res.redirect('/addPartner?message=');
+            res.render('addPartner', { message: 'Error adding parent.' });
           }
          // console.log("Step 3: Parent information inserted");
 
@@ -1803,7 +1728,8 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
           conn.query(sql3, [Email], (err, children) => {
             if (err) {
               console.error('Error getting child data:', err);
-              return res.redirect('/addPartner?message=Error getting child data.');
+              //return res.redirect('/addPartner?message=E');
+              res.render('addPartner', { message: 'Error getting child data.' });
             }
            // console.log("Step 4: Fetched children:", children);
             // Check if any children were found
@@ -1815,7 +1741,8 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
                 conn.query(sql4, [child.Child_ID, email], (err, result) => {
                   if (err) {
                     console.error('Error associating child with parent:', err);
-                    return res.redirect('/addPartner?message=Error adding parent to child association.');
+                    //return res.redirect('/addPartner?message=Error adding parent to child association.');
+                    res.render('addPartner', { message: 'Error adding parent to child association.' });
                   }
 
                   // Log success for each child association
@@ -1824,13 +1751,15 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
 
                   // Redirect if all inserts are done
                   if (insertCount === children.length) {
-                    return res.redirect('/addPartner?message=Successfully associated children with parent.');
+                    //return res.redirect('/addPartner?message=Successfully associated children with parent.');
+                    res.render('addPartner', { message: 'Successfully associated children with parent.' });
                   }
                 });
               });
             } else {
              // console.log("Step 6: No children found");
-              return res.redirect('/addPartner?message=No children found for this parent email.');
+              //return res.redirect('/addPartner?message=No children found for this parent email.');
+              res.render('addPartner', { message: 'No children found for this parent email.' });
             }
           });
         });
@@ -2026,7 +1955,7 @@ app.post('/feedbackInbox', function(req, res) {
       
       // Conditional redirect based on user role
       if (req.userRole === 'teacher') {
-        res.redirect('/teacherViewMsg?message=' + encodeURIComponent(message));
+        res.redirect('/teacherInbox?message=' + encodeURIComponent(message));
       } else if (req.userRole === 'parent') {
         res.redirect('/parentInbox?message=' + encodeURIComponent(message));
       }
@@ -2039,9 +1968,65 @@ app.post('/feedbackInbox', function(req, res) {
   }
 });
 
+app.post('/deleteMsg', function(req, res) {
+  if (req.session.loggedin && (req.userRole === 'teacher' || req.userRole === 'parent')) {
+   
+    const id = req.body.id; 
+    const message = "Message deleted successfully.";
 
+   
+
+    conn.query('DELETE FROM message WHERE ID = ?', [id], function(err) {
+      if (err) {
+        console.error("Error deleting message:", err);
+        return res.status(500).send("Error deleting message");
+      }
+      
+      // Conditional redirect based on user role
+      if (req.userRole === 'teacher') {
+        res.redirect('/teacherInbox?message=' + encodeURIComponent(message));
+      } else if (req.userRole === 'parent') {
+        res.redirect('/parentInbox?message=' + encodeURIComponent(message));
+      }
+    });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');
+  } else {
+    // Custom access denied message specifying role
+    res.send('Access denied: only teachers or parents can access this page');
+  }
+});
+
+app.post('/deleteSendMsg', function(req, res) {
+  if (req.session.loggedin && (req.userRole === 'teacher' || req.userRole === 'parent')) {
+   
+    const id = req.body.id; 
+    const message = "Message deleted successfully.";
+
+   
+
+    conn.query('DELETE FROM message WHERE ID = ?', [id], function(err) {
+      if (err) {
+        console.error("Error deleting message:", err);
+        return res.status(500).send("Error deleting message");
+      }
+      
+      // Conditional redirect based on user role
+      if (req.userRole === 'teacher') {
+        res.redirect('/teacherSendMsg?message=' + encodeURIComponent(message));
+      } else if (req.userRole === 'parent') {
+        res.redirect('/parentSendMsg?message=' + encodeURIComponent(message));
+      }
+    });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');
+  } else {
+    // Custom access denied message specifying role
+    res.send('Access denied: only teachers or parents can access this page');
+  }
+});
 // Helper function to render teacherMsg with required data
-function renderTeacherMsg(req, res, message = "") {
+function renderTeacherSendMsg(req, res, message = "") {
   const email = req.session.email;
   conn.query("SELECT * FROM child", function (err, children) {
     if (err) {
@@ -2087,7 +2072,7 @@ function renderTeacherMsg(req, res, message = "") {
             }
 
             // Render the view with all the necessary data
-            res.render("teacherMsg", {
+            res.render("teacherSendMsg", {
               children: children,
               parentsByChild: parentsByChild,
               userRole: req.session.userRole,
@@ -2102,16 +2087,16 @@ function renderTeacherMsg(req, res, message = "") {
 }
 
 // GET route for /teacherMsg
-app.get('/teacherMsg', function (req, res) {
+app.get('/teacherSendMsg', function (req, res) {
   if (req.session.loggedin && req.session.userRole === 'teacher') {
-    renderTeacherMsg(req, res);
+    renderTeacherSendMsg(req, res);
   } else {
     res.redirect('/login'); // Redirect to login if not logged in
   }
 });
 
 // POST route for /teacherMsg
-app.post('/teacherMsg', function (req, res) {
+app.post('/teacherSendMsg', function (req, res) {
   if (req.session.loggedin && req.session.userRole === 'teacher') {
     const { child, topic, message, parent } = req.body;
     const email = req.session.email;
@@ -2127,7 +2112,7 @@ app.post('/teacherMsg', function (req, res) {
         }
 
         // Call the helper function with a success message
-        renderTeacherMsg(req, res, "Message sent successfully. Thank you!");
+        renderTeacherSendMsg(req, res, "Message sent successfully. Thank you!");
       }
     );
   } else {
@@ -2476,7 +2461,7 @@ app.get('/addNew', function(req, res) {
       // Check if there is existing data for this parent
       if (result.length === 0) {
         res.render('addNew', { 
-          message: 'No profile data found. Please add a new authorized person.',
+          message: '',
           data: null,
           editMode: true // No existing data, so set to "add" mode
         });
@@ -2613,6 +2598,7 @@ app.post('/deleteAddNew', function (req, res) {
 
       // Redirect to add new or appropriate route
       res.redirect('/addNew?message=Authorized person deleted successfully');
+      //res.render('/addNew', { message: 'Authorized person deleted successfully' });
     });
   } else if (!req.session.loggedin) {
     res.redirect('/login');

@@ -1,0 +1,139 @@
+<html>
+<head>
+  <%- include('partials/header1.ejs') %>
+</head>
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="content">
+    <h2>Send a message</h2>
+  
+    <% if (message) { %>
+      <div class="message"><%= message %></div>
+    <% } %>
+ 
+
+    <div class="profile-container">
+      <form action="/teacherMsg" method="post">
+        <table class="table table-dark">
+          <tr>
+            <th>Child:</th>
+            <td>
+              <select name="child" id="childSelect" required>
+                <option value="">Please select one</option>
+                <% children.forEach(function(child) { %>
+                  <option value="<%= child.ID %>"><%= child.First_Name %> <%= child.Last_Name %></option>
+                <% }) %>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <th>Parent/Guardian:</th>
+            <td id="parentOptions">
+              <!-- Parent radio buttons will be populated here based on the selected child -->
+            </td>
+          </tr>
+
+          <tr>
+            <th>Topic:</th>
+            <td>
+              <select name="topic" required>
+                <option value="">Please select one</option>
+                <option value="meet">Need to meet parent</option>
+                <option value="complain">Complain</option>
+                <option value="comment">Comment</option>
+                <option value="suggestion">Suggestion</option>
+                <option value="other">Other</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <th>Message:</th>
+            <td><textarea name="message" class="responsive-textarea"></textarea></td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="text-align: right;">
+              <input type="submit" value="Send" class="btn btn-primary">
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <div class="profile-container">
+      <h1>History</h1>
+  
+      <table class="table table-dark">
+        <tr>
+          <th>Child</th>
+          <th>Relationship</th>
+          <th>Parent</th>
+          <th>Topic</th>
+          <th>Message</th>
+          <th>Feedback</th>
+          <th>Delete</th>
+         
+        </tr>
+  
+      <% if (manageMsgData.length != 0) {var i = 1; manageMsgData.forEach(function(data){%>
+        <tr>
+          <td><%= data.Child_First_Name %> <%= data.Child_Last_Name %></td>
+          <td><%= data.Relationship %></td>
+          <td><%= data.Parent_First_Name %> <%= data.Parent_Last_Name %></td>
+          <td><%=data.Topic %></td>
+          <td><%=data.Message %></td>
+
+          <td>
+            <% if (data.Feedback === '' || data.Feedback === null) { %>
+              No Response Yet
+            <% } else { %>
+              <%= data.Feedback %>
+            <% } %>
+          </td>
+  
+          <td>
+          
+            <form action="/deleteSendMsg" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+              <input type="hidden" name="id" value="<%= data.ID %>">
+              <input type="submit" value="Delete">
+            </form>
+       
+          </td>
+        </tr>
+      <% i++;})%> <%}%>
+      
+    </table>
+  
+   
+      </div>
+
+  </div>
+
+  <%- include('partials/footer.ejs') %>
+
+  <script>
+    const parentsByChild = <%- JSON.stringify(parentsByChild) %>;
+ 
+
+    document.getElementById('childSelect').addEventListener('change', function() {
+      const childId = this.value;
+      const parentContainer = document.getElementById('parentOptions');
+      parentContainer.innerHTML = '';
+
+      if (parentsByChild[childId]) {
+        parentsByChild[childId].forEach(parent => {
+          const parentOption = `
+            <div>
+              <input type="radio" name="parent" id="parent_${parent.Email}" value="${parent.Email}" required>
+              <label for="parent_${parent.Email}">${parent.Relationship} </label>
+            </div>
+          `;
+          parentContainer.insertAdjacentHTML('beforeend', parentOption);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

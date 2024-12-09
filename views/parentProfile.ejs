@@ -7,12 +7,12 @@
     <div class="content">
       <div class="profile-container">
         <h2>Parent Profile</h2>
-        <br>
+      
         <% if (message) { %>
-          <div style="color: blue; font-weight: bold;"><%= message %></div>
+          <div class="Message"><%= message %></div>
         <% } %>
-        <br>
-
+       
+        <p><strong>Note:</strong> All fields are required.</p>
         <form action="<%= editMode ? '/updateParentProfile' : '#' %>" method="post" enctype="multipart/form-data">
           <table class="table table-striped">
             <tr>

@@ -28,7 +28,7 @@ function hasPartnerMiddleware(req, res, next) {
     }
 
     // Set hasPartner to true if the count is greater than 0, else false
-    res.locals.hasPartner = result[0].partnerCount > 0;
+    res.locals.hasPartner = result[0].partnerCount === 2;
     next(); // Proceed to the next middleware or route
   });
 }

@@ -47,7 +47,7 @@
             <td>
             
               <form action="/deleteMsg" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
-                <input type="hidden" name="email" value="<%= data.Email %>">
+                <input type="hidden" name="id" value="<%= data.ID %>">
                 <input type="submit" value="Delete">
               </form>
          
