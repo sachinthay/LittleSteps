@@ -171,7 +171,7 @@ app.get('/enrolment', function(req, res) {
 });
 
 app.get('/admin/enrolment', (req, res) => {
-  
+  if (req.session.loggedin && req.userRole === 'admin') {
   conn.query('SELECT * FROM EnrollmentDetails', (err, detailResults) => {
     if (err) {
       console.error("Error fetching enrollment details:", err);
@@ -190,10 +190,18 @@ app.get('/admin/enrolment', (req, res) => {
       });
     });
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  
+} else {
+  res.send('Access denied: Admin only');
+}
+
 });
 
 
+
 app.post('/updateFees', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const updatedFees = [];
 
   Object.keys(req.body).forEach(key => {
@@ -210,7 +218,7 @@ app.post('/updateFees', (req, res) => {
     fee[field] = req.body[key];
   });
 
-  console.log("Parsed Updated Fees:", updatedFees);
+  //console.log("Parsed Updated Fees:", updatedFees);
 
   // Update each fee in the database
   updatedFees.forEach(fee => {
@@ -231,19 +239,23 @@ app.post('/updateFees', (req, res) => {
     ], (err, result) => {
       if (err) {
         console.error("Error updating fee with ID:", fee.id, err);
-      } else {
-        console.log("Successfully updated fee with ID:", fee.id);
       }
     });
   });
 
   res.redirect('/admin/enrolment');
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 
 
 
 app.post('/updateEnrollmentDetails', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const updatedDetails = Object.keys(req.body).map(key => req.body[key]);
 
   conn.query('DELETE FROM EnrollmentDetails', (err) => {
@@ -264,6 +276,11 @@ app.post('/updateEnrollmentDetails', (req, res) => {
       res.redirect('/admin/enrolment');
     });
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 
@@ -331,7 +348,6 @@ app.post('/registerUser', async function (req, res) {
         conn.query(sql, [FirstName, LastName, Gender, Role, Email, hashedPassword, status], function (err, result) {
           if (err) throw err;
 
-          // Send success message
           let message = 'Registration successful! Your account is awaiting admin approval.';
           res.render('register', { message: message });
         });
@@ -415,9 +431,9 @@ app.post('/setPassword/:email', async function (req, res) {
       // Hash the password using bcrypt
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Update the hashed password in the database
+      // Update the hashed password in the database where Password is NULL
       conn.query(
-        'UPDATE users SET Password = ? WHERE Email = ?',
+        'UPDATE users SET Password = ? WHERE Email = ? AND Password IS NULL',
         [hashedPassword, email],
         function (error, results) {
           if (error) {
@@ -428,8 +444,16 @@ app.post('/setPassword/:email', async function (req, res) {
             });
           }
 
-          // Password successfully updated, redirect to login
-          res.render('login', { message: 'Password successfully updated. Please log in.' });
+          // Check if any rows were updated
+          if (results.affectedRows === 0) {
+            res.render('setPassword', {
+              email: email,
+              message: 'Password cannot be updated. Either the email does not exist, or a password has already been set.',
+            });
+          } else {
+            // Password successfully updated, redirect to login
+            res.render('login', { message: 'Password successfully updated. Please log in.' });
+          }
         }
       );
     } catch (err) {
@@ -511,10 +535,14 @@ app.get('/parentsOnly', function (req, res) {
 app.get('/adminOnly', (req, res) => {
   if (req.session.loggedin && req.userRole === 'admin') {
     res.render('adminOnly', { title: 'Admin Portal' });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');
+    res.send('Access denied: Admin only');
   }
+
 });
+
 
 
 app.post('/submitContactForm', (req, res) => {
@@ -551,11 +579,12 @@ app.get('/admin/contactUs', (req, res) => {
 } else if (!req.session.loggedin) {
   res.redirect('/login');  // Redirect to login if the user is not logged in
 } else {
-  res.send('Access denied: Admins only');  // Access denied message for non-admin users
+  res.send('Access denied: Admin only');  // Access denied message for non-admin users
 }
 });
 
 app.get('/manageContactUs', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const query = 'SELECT * FROM contact_info LIMIT 1'; // Modify this query based on your database structure
   conn.query(query, (err, results) => {
     if (err) {
@@ -566,10 +595,16 @@ app.get('/manageContactUs', (req, res) => {
     res.render('manageContactUs', { contact, message:'' });
 
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 
 });
 //manage contactus page
 app.post('/updateContactInfo', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const { address, phone, email, location_link } = req.body;
 
   // Update query
@@ -583,6 +618,11 @@ app.post('/updateContactInfo', (req, res) => {
           res.redirect('/manageContactUs'); // Redirect to the /contactUs route
       }
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 
@@ -623,7 +663,7 @@ app.get('/admin/feedback', (req, res) => {
 } else if (!req.session.loggedin) {
   res.redirect('/login');  // Redirect to login if the user is not logged in
 } else {
-  res.send('Access denied: Admins only');  // Access denied message for non-admin users
+  res.send('Access denied: Admin only');  // Access denied message for non-admin users
 }
 });
 
@@ -653,12 +693,13 @@ app.get('/manageUser', function (req, res) {
   } else if (!req.session.loggedin) {
     res.redirect('/login'); // Redirect to login if the user is not logged in
   } else {
-    res.send('Access denied: Admins only'); // Access denied message for non-admin users
+    res.send('Access denied: Admin only'); // Access denied message for non-admin users
   }
 });
 
-
+//Manage user fillter by
 app.get('/registerApproval', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const selectedRole = req.query.role || '';    // Get role filter from query
   const selectedStatus = req.query.status || ''; // Get status filter from query
 
@@ -688,6 +729,11 @@ app.get('/registerApproval', (req, res) => {
       message: ''
     });
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
       // POST approveUser - Admin can approve or change user status
@@ -717,8 +763,10 @@ app.post('/approveUser', function(req, res) {
         });
       });
     });
-  } else {
+  } else if (!req.session.loggedin) {
     res.redirect('/login');  // Redirect to login if the user is not logged in
+  } else {
+    res.send('Access denied: Admin only');
   }
 });
 
@@ -752,8 +800,10 @@ app.post('/deleteUser', function(req, res) {
         });
       });
     });
-  } else {
+  } else if (!req.session.loggedin) {
     res.redirect('/login');  // Redirect to login if the user is not logged in
+  } else {
+    res.send('Access denied: Admin only');
   }
 });
 
@@ -791,10 +841,6 @@ app.get('/teacherProfile', function(req, res) {
   if (req.session.loggedin && req.userRole === 'teacher') {
     const message = req.query.message;  // Retrieve the message from the query string, if any
     const email = req.session.email;
-
-    // Log session email for debugging
-    //console.log("Session email in teacherProfile:", email);
-    
     // Query to get the teacher's profile
     conn.query("SELECT * FROM teachers AS t INNER JOIN users AS u ON t.Email = u.Email WHERE t.Email = ?", [email], function(err, result) {
      // console.log("Query result1:", result);
@@ -1044,16 +1090,11 @@ app.get('/parentProfile', function(req, res) {
 });
 
 
-
-
-
 // Route to display the edit profile page for parents
 app.get('/editParent', function(req, res) {
   if (req.session.loggedin && req.userRole === 'parent') {  // Use req.userRole from middleware
     const message = req.query.message;
     const email = req.session.email;
-
-    //console.log("Session email in editProfile:", email);
     
     // Query to get the parent's profile
     conn.query("SELECT * FROM parent AS p INNER JOIN users AS u ON p.Email = u.Email WHERE p.Email = ?", [email], function(err, result) {
@@ -1288,8 +1329,10 @@ app.get('/child', (req, res) => {
       res.render('child', { children, message: req.query.message , //userRole: req.userRole,  
         editMode: false, });
     });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');
+    res.send('Access denied: Parent only');
   }
 });
   
@@ -1463,9 +1506,12 @@ app.post('/addChild', upload.single('picture'), function (req, res) {
     } else {
       res.redirect('/child?message=All fields are required');
     }
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');
+    res.send('Access denied: Parent only');
   }
+
 });
   
 
@@ -1517,8 +1563,10 @@ app.get('/parentSendMsg', function(req, res) {
         });
       }
     });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');  // Redirect to login if not logged in
+    res.send('Access denied: Parent only');
   }
 });
 
@@ -1542,9 +1590,12 @@ app.post('/parentSendMsg', function(req, res) {
       // Redirect to the GET route after successful insertion
       res.redirect('/parentSendMsg?message=Message sent successfully');
     });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');  // Redirect to login if not logged in
+    res.send('Access denied: Parent only');
   }
+
 });
    
 
@@ -1683,12 +1734,12 @@ app.post('/slideshow/update/:id', upload.single('image_url'), (req, res) => {
 app.get('/addPartner', function (req, res){
   if (req.session.loggedin && req.userRole === 'parent') {
 
-   
-
-    res.render("addPartner", { userRole: req.userRole , message:null});
+    res.render("addPartner", { message:null});
   
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');  // Redirect to login if not logged in
+    res.send('Access denied: Parent only');
   }
   
 });
@@ -1768,8 +1819,10 @@ app.post('/addPartner', upload.single('picture'), function (req, res) {
       //console.log("Step 0: Missing fields");
       res.redirect('/addPartner?message=All fields are required');
     }
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login');
+    res.send('Access denied: Parent only');
   }
 });
 
@@ -1812,14 +1865,21 @@ ORDER BY e.event_date ASC`;
 
 // Render form to upload image
 app.get('/add_gallery', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const sql = 'SELECT id, title, description, event_date FROM events ORDER BY event_date ASC';
   conn.query(sql, (err, results) => {
       if (err) throw err;
       res.render('add_gallery', { events: results });
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 app.post('/add-event-photos', upload.array('images', 10), (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const eventId = req.body.event_id;
   const images = req.files.map(file => file.filename);
 
@@ -1831,10 +1891,16 @@ app.post('/add-event-photos', upload.array('images', 10), (req, res) => {
   });
 
   res.redirect('/gallery');
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 // Handle image upload form
 app.post('/add-gallery', upload.single('image'), (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const image_url = `/uploads/${req.file.filename}`;
   const { description } = req.body;
   let sql = 'INSERT INTO gallery (image_url, description) VALUES (?, ?)';
@@ -1842,6 +1908,11 @@ app.post('/add-gallery', upload.single('image'), (req, res) => {
       if (err) throw err;
       res.redirect('/gallery');
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 app.get('/events', (req, res) => {
@@ -1859,10 +1930,8 @@ app.get('/news_events', (req, res) => {
 });
 
 
-
-
-
 app.get('/add_news_event', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   conn.query("SELECT event_date FROM events", (error, rows) => {
     if (error) {
       console.error("Error fetching event dates:", error);
@@ -1875,9 +1944,15 @@ app.get('/add_news_event', (req, res) => {
     });
     res.render('add_news_event', { eventDates });
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 app.post('/add-news-event', upload.single('picture'), (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const { title, description, event_date } = req.body;
   let picture = req.file ? req.file.filename : null;
 
@@ -1887,6 +1962,11 @@ app.post('/add-news-event', upload.single('picture'), (req, res) => {
       if (err) throw err;
       res.redirect('/events');
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 // API route to fetch events for a specific month and year
@@ -1911,6 +1991,7 @@ app.get('/api/events/:year/:month', (req, res) => {
 
 // Handle form submission with multiple image uploads
 app.post('/add-event', upload.array('images', 10), (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const { title, description, event_date } = req.body;
 
   // Insert event details
@@ -1934,6 +2015,11 @@ app.post('/add-event', upload.array('images', 10), (req, res) => {
           res.redirect('/gallery');
       }
   });
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 
@@ -2090,9 +2176,12 @@ function renderTeacherSendMsg(req, res, message = "") {
 app.get('/teacherSendMsg', function (req, res) {
   if (req.session.loggedin && req.session.userRole === 'teacher') {
     renderTeacherSendMsg(req, res);
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login'); // Redirect to login if not logged in
+    res.send('Access denied: Teachers only');
   }
+
 });
 
 // POST route for /teacherMsg
@@ -2115,9 +2204,12 @@ app.post('/teacherSendMsg', function (req, res) {
         renderTeacherSendMsg(req, res, "Message sent successfully. Thank you!");
       }
     );
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if the user is not logged in
   } else {
-    res.redirect('/login'); // Redirect to login if not logged in
+    res.send('Access denied: Teachers only');
   }
+
 });
 
 app.get('/parentInbox', function(req, res) {
@@ -2151,7 +2243,7 @@ app.get('/parentInbox', function(req, res) {
   } else if (!req.session.loggedin) {
     res.redirect('/login');
   } else {
-    res.send('Access denied: parent only');
+    res.send('Access denied: Parents only');
   }
 });
 
@@ -2226,15 +2318,23 @@ GROUP BY
 
 // Route for viewing child-parent list
 app.get('/childParentList', function(req, res) {
+  if (req.session.loggedin && req.userRole === 'teacher') {
   renderChildParentList(req, res, 'childParentList');
+} else if (!req.session.loggedin) {
+  res.redirect('/login');
+} else {
+  res.send('Access denied: Teachers only');
+}
 });
 
 // Route for adding child-parent list (admin only)
 app.get('/addChildParentList', function(req, res) {
   if (req.userRole === 'admin') {
     renderChildParentList(req, res, 'addChildParentList');
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');
   } else {
-    res.send('Access denied: admin only');
+    res.send('Access denied: Admin only');
   }
 });
 
@@ -2251,8 +2351,10 @@ app.post('/approvePerson', function(req, res) {
        renderChildParentList(req, res, 'addChildParentList');
 
     });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');
   } else {
-    res.redirect('/login');  // Redirect to login if the user is not logged in
+    res.send('Access denied: Admin only');
   }
 });
 
@@ -2268,14 +2370,17 @@ app.post('/deletePerson', function(req, res) {
        renderChildParentList(req, res, 'addChildParentList');
 
     });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');
   } else {
-    res.redirect('/login');  // Redirect to login if the user is not logged in
+    res.send('Access denied: Admin only');
   }
 });
 
 
 
 app.post('/updateHomeContent', (req, res) => {
+  if (req.session.loggedin && req.userRole === 'admin') {
   const content1 = req.body.content1;
   const content2 = req.body.content2;
   const content3 = req.body.content3;
@@ -2304,6 +2409,11 @@ app.post('/updateHomeContent', (req, res) => {
   });
 
   res.redirect('/');
+} else if (!req.session.loggedin) {
+  res.redirect('/login');  // Redirect to login if the user is not logged in
+} else {
+  res.send('Access denied: Admin only');
+}
 });
 
 app.get('/editHome', function(req, res) {
