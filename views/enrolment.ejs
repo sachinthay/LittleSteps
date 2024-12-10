@@ -7,29 +7,34 @@
     <div class="content"> 
       <h2>Enrolment</h2>
       <h2>Fees</h2>
-      <table class="table table-hover">
-        <tr> 
-          <th>Age limits =></th>
-          <th colspan="2">Under 3 years old</th>
-          <th colspan="2">Over 3 years old</th>
-        </tr>
-        <tr>
-          <th>Days</th>
-          <th>* Short Day</th>
-          <th>**Long Day</th>
-          <th>*Short Day</th>
-          <th>**Long Day (With 20 hours ECE attestation)</th>
-        </tr>
-        <% feesData.forEach(fee => { %>
-          <tr>
-            <td><%= fee.day_count %></td>
-            <td><%= fee.short_day_fee_under_3 %></td>
-            <td><%= fee.long_day_fee_under_3 %></td>
-            <td><%= fee.short_day_fee_over_3 %></td>
-            <td><%= fee.long_day_fee_over_3 %></td>
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr> 
+            <th>Age Limits =></th>
+            <th colspan="2">Under 3 years old</th>
+            <th colspan="2">Over 3 years old</th>
           </tr>
-        <% }) %>
+          <tr>
+            <th>Days</th>
+            <th title="Short Day Fee">* Short Day</th>
+            <th title="Long Day Fee">** Long Day</th>
+            <th title="Short Day Fee">* Short Day</th>
+            <th title="Long Day Fee (With 20 hours ECE attestation)">** Long Day</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% feesData.forEach(fee => { %>
+            <tr>
+              <td><%= fee.day_count %></td>
+              <td style="text-align: right;"><%= fee.short_day_fee_under_3 %></td>
+              <td style="text-align: right;"><%= fee.long_day_fee_under_3 %></td>
+              <td style="text-align: right;"><%= fee.short_day_fee_over_3 %></td>
+              <td style="text-align: right;"><%= fee.long_day_fee_over_3 %></td>
+            </tr>
+          <% }) %>
+        </tbody>
       </table>
+      
       <br>
       <div class="left-align-section">
         <h3>
@@ -40,8 +45,6 @@
           </ul>
         </h3>
       </div>
-      
-
     </div>
     <%- include('partials/footer.ejs') %>
   </body>

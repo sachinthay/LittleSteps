@@ -30,7 +30,7 @@
         <!-- Add more fields as needed -->
         <button type="submit">Update Content</button>
       </form>
-<br>
+    <br>
 
       <h1>Edit Slideshow</h1>
       <% slideshow.forEach(slide => { %>
@@ -40,15 +40,12 @@
             <table class="table table-dark">
               <tr>
                 <th> <label for="image_url">Image URL:</label></th>
-          
-
-
             <td>
-            
               <img id="picturePreview" src="<%= slide.image_url %>" alt="Slide Picture" width="100">  <br>
               <input type="file" name="image_url" id="pictureInput">
               <input type="hidden" name="oldPicture" value="<%= slide.image_url %>">
-            </td>  </tr>
+            </td>  
+          </tr>
 
             <script>
               document.getElementById('pictureInput')?.addEventListener('change', function(event) {
@@ -81,8 +78,10 @@
             <th colspan="2"> <button type="submit">Update Slide</button></th></tr>
         </form>
       <% }); %>
-
     </div>
+  
+   
+  
     <%- include('partials/footer.ejs') %>
   </body>
 </html>

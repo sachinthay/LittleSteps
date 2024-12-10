@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
           calendar.appendChild(dateDiv);
       }
   }
+ 
+ 
 
   function displayEventDetails(event) {
       eventList.innerHTML = `
@@ -53,10 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
               <h2>${event.title}</h2>
               <p>${event.description}</p>
               <p>Event Date: ${new Date(event.event_date).toLocaleDateString()}</p>
-              <p>Event Picture: </p> <img src="/public/uploads/${event.picture}" width="100">
+             <p>Event Picture:</p>
+                <div class="gallery-item">
+                   <img src="/public/uploads/${event.picture}"  alt="Event Picture" onclick="openLightbox(this)">
+              </div>
           </div>
       `;
   }
+
+
 
   function fetchEvents() {
       const year = currentDate.getFullYear();
@@ -83,3 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initial render
   fetchEvents();
 });
+
+
+
+function openLightbox(imgElement) {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    lightboxImage.src = imgElement.src;
+    lightbox.style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}

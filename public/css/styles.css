@@ -2,7 +2,7 @@
 /* General Reset for Headings */
 h1, h2, h3 {
   margin: 0; /* Removes default margin */
-  padding: 10px; /* Adds padding for spacing */
+  padding: 8px; /* Adds padding for spacing */
   text-align: center; /* Centers the text */
   line-height: 1.5; /* Improves readability */
 }
@@ -12,23 +12,20 @@ h1 {
  
   font-weight: bold; /* Bold for emphasis */
   color: #ef0897; /* Primary blue color */
-  
-  padding-bottom: 10px; /* Space below the heading */
+  font-size: larger;
 }
 
 h2 {
-  color: #ca1f7a;
+  color: #ef0897;
+  font-size: large;
   font-weight: bold;/* Semi-bold for hierarchy */
   border-radius: 5px; /* Rounded edges */
-  padding: 15px; /* Adds spacing around the text */
 }
 
 h3 {
   
   font-weight: normal; /* Regular font weight */
-  color: #b4b1b1; /* Neutral color for less emphasis */
- 
-  padding: 10px; /* Space around the heading */
+  color: azure; /* Neutral color for less emphasis */
   margin-bottom: 10px; /* Separates it from other elements */
 }
 
@@ -335,9 +332,10 @@ a{
   padding: 20px;
  margin-left: auto;
  margin-right: auto;
-  width: 80%;
+  width:inherit;
   background-color: #f9f9f9;
   color: black;
+  border-radius: 10px;
 }
 
 /* Calendar Styles */
@@ -805,6 +803,7 @@ a{
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
         border-radius: 10px;
         border: 1px solid #444; /* Subtle border */
+        margin-bottom: 50px;
       }
       
       /* Mobile responsiveness: Adjust for screens smaller than 600px */
@@ -848,8 +847,13 @@ a{
         .content {
           width: 80%; /* Slightly reduce content width */
         }
-      
-        h1, h2, h3, p {
+        h1 {
+          font-size: 30px; /* Adjust larger font size for headings */
+        }
+        h2 {
+          font-size: 28px; /* Adjust larger font size for headings */
+        }
+        h3, p {
           font-size: 24px; /* Adjust larger font size for headings */
         }
       }
@@ -907,3 +911,30 @@ a{
         color: rgb(229, 38, 162); 
         font-weight: bold;
       }
+
+      .table {
+        
+        border-collapse: inherit;
+      }
+      
+      .table-hover tbody tr:hover {
+        background-color: #f9f9f9;
+      }
+      
+      .table-bordered th, .table-bordered td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      
+      .table-light th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+      }
+      
+      caption {
+        caption-side: top;
+        font-size: 1.2em;
+        margin-bottom: 8px;
+      }
+
+  
