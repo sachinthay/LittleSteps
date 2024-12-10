@@ -52,6 +52,9 @@
           <li class="nav-item">
             <a class="nav-link <%= currentPath === '/adminOnly' ? 'active' : '' %>" href="/adminOnly">Admin Portal</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentPath === '/adminProfile' ? 'active' : '' %>" href="/adminProfile">Admin Profile</a>
+          </li>
           <a class="nav-link <%= currentPath === '/manageUser' ? 'active' : '' %>" href="/manageUser">
             Manage Users
             <% if (pendingCount > 0) { %>

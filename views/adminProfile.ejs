@@ -6,14 +6,12 @@
     <%- include('partials/navbar1.ejs') %>
     <div class="content">
       <div class="profile-container">
-      <h2>Teacher Profile</h2>
-      <br>
+      <h2>Admin Profile</h2>
       <% if (message) { %>
         <div class="message"><%= message %></div>
       <% } %>
-      <br>
       <!-- Common table structure for both view and edit modes -->
-      <form action="<%= editMode ? '/updateTeacherProfile' : '#' %>" method="post" enctype="multipart/form-data">
+      <form action="<%= editMode ? '/updateAdminProfile' : '#' %>" method="post" enctype="multipart/form-data">
         <table class="table table-dark">
           <tr>
             <th>Attributes</th>
@@ -55,6 +53,7 @@
               <% if (editMode) { %>
                 <select name="position" required>
                   <option value="" disabled selected>Please select one</option>
+                  <option value="Center Manager" <%= data.Position === 'Center Manager' ? 'selected' : '' %>>Center Manager</option>
                   <option value="Qualified Teacher" <%= data.Position === 'Qualified Teacher' ? 'selected' : '' %>>Qualified Teacher</option>
                   <option value="Unqualified Teacher" <%= data.Position === 'Unqualified Teacher' ? 'selected' : '' %>>Unqualified Teacher</option>
                   <option value="Trainee Teacher" <%= data.Position === 'Trainee Teacher' ? 'selected' : '' %>>Trainee Teacher</option>
@@ -108,7 +107,7 @@
           </div>
         <% } else { %>
           <br>
-          <a href="/editTeacher" class="btn btn-primary">Edit Profile</a>
+          <a href="/editAdmin" class="btn btn-primary">Edit Profile</a>
         <% } %>
       </td>
       </tr>

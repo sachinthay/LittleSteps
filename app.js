@@ -1004,7 +1004,334 @@ app.get('/editTeacher', function(req, res) {
   }
 });
 
+app.post('/updateTeacherProfile', upload.single('picture'), function (req, res) {
+  if (req.session.loggedin && req.userRole === 'teacher') { // Use req.userRole
 
+    const email = req.session.email;
+    const { id, first_name, last_name, position, qualification, note } = req.body;
+    let picture = req.body.oldPicture; // Default to old picture if no new one is uploaded
+
+    // Update picture if a new one is uploaded
+    if (req.file) {
+      picture = req.file.filename;
+    }
+
+    // Check for required fields
+    if (first_name && last_name && position && qualification) {
+
+      // Check if the teacher exists in the 'teachers' table
+      conn.query('SELECT * FROM teachers WHERE Email = ?', [email], (err, teacherResult) => {
+        if (err) {
+          console.error('Error fetching teacher data:', err);
+          return res.render('teacherProfile', { message: 'Error fetching teacher data.', data: req.body });
+        }
+
+        if (teacherResult.length > 0) {
+          // Teacher exists, proceed with the update
+          // console.log("Teacher exists, updating profile", email);
+
+          // Update 'users' table
+          conn.query('UPDATE users SET First_Name = ?, Last_Name = ? WHERE Email = ?',
+            [first_name, last_name, email], (err, result) => {
+              if (err) {
+                console.error('Error updating user profile:', err);
+                return res.render('teacherProfile', { message: 'Error updating user profile.', data: req.body });
+              }
+
+              // Update 'teachers' table
+              conn.query('UPDATE teachers SET Position = ?, Qualification = ?, Note = ?, Picture = ? WHERE Email = ?',
+                [position, qualification, note, picture, email], (err, result) => {
+                  if (err) {
+                    console.error('Error updating teacher profile:', err);
+                    return res.render('teacherProfile', { message: 'Error updating teacher profile.', data: req.body });
+                  }
+
+                  // Successfully updated
+                  res.redirect('/teacherProfile?message=Profile updated successfully');
+                });
+            });
+
+        } else {
+          // No teacher record exists, insert a new one
+          // console.log("No teacher record, inserting new profile", email);
+
+          // Insert into 'teachers' table
+          conn.query('INSERT INTO teachers (Email, Position, Qualification, Note, Picture) VALUES (?, ?, ?, ?, ?)',
+            [email, position, qualification, note, picture], (err, insertResult) => {
+              if (err) {
+                console.error('Error inserting new teacher profile:', err);
+                return res.render('teacherProfile', { message: 'Error inserting new teacher profile.', data: req.body });
+              }
+
+              // Inserted successfully, now update the 'users' table
+              conn.query('UPDATE users SET First_Name = ?, Last_Name = ? WHERE Email = ?',
+                [first_name, last_name, email], (err, result) => {
+                  if (err) {
+                    console.error('Error updating user profile:', err);
+                    return res.render('teacherProfile', { message: 'Error updating user profile.', data: req.body });
+                  }
+
+                  // Successfully inserted and updated
+                  res.redirect('/teacherProfile?message=Profile created and updated successfully');
+                });
+            });
+        }
+      });
+
+    } else {
+      // Missing required fields
+      res.redirect('/teacherProfile?message=All fields are required');
+    }
+  } else if (!req.session.loggedin) {
+    res.redirect('/login'); // Redirect to login if not logged in
+  } else {
+    res.send('Access denied: Teachers only');
+  }
+});
+
+//admin profile
+app.get('/adminProfile', function(req, res) {
+  if (req.session.loggedin && req.userRole === 'admin') {
+    const message = req.query.message;  // Retrieve the message from the query string, if any
+    const email = req.session.email;
+    // Query to get the teacher's profile
+    conn.query("SELECT * FROM teachers AS t INNER JOIN users AS u ON t.Email = u.Email WHERE t.Email = ?", [email], function(err, result) {
+     // console.log("Query result1:", result);
+      
+      if (err) {
+        console.error("Error fetching profile:", err); 
+        return res.render('adminProfile', { 
+          message: 'Error fetching profile data',
+          data: result,
+          editMode: false,  // No data to show in case of an error
+        });
+      }
+      
+      // Check if the result is empty
+      if (result.length === 0) {
+        // If no profile data found, fetch basic user data from the users table
+        conn.query("SELECT First_Name, Last_Name, Email FROM users WHERE Email = ?", [email], function(err, userResult) {
+          if (err) {
+            console.error("Error fetching user data:", err); 
+            return res.render('adminProfile', { 
+              message: 'Error fetching user data',
+              data: userResult,
+              editMode: false, 
+            });
+          }
+          
+          // If user data is found, render with that data
+          if (userResult.length > 0) {
+            res.render('adminProfile', { 
+              title: 'Update Admin Profile',
+              data: {  // Create a data object that includes user data
+                First_Name: userResult[0].First_Name,
+                Last_Name: userResult[0].Last_Name,
+                Email: userResult[0].Email,
+                Position: '',  // Default or placeholder if not applicable
+                Qualification: '',  // Default or placeholder if not applicable
+                Note: '',  // Default or placeholder if not applicable
+                Picture: ''  // Default or placeholder if not applicable
+              },
+              message: message,
+              email: email,
+              editMode: false, 
+            });
+          } else {
+            // If no user data is found, handle accordingly
+            res.render('adminProfile', { 
+              title: 'Update Admin Profile',
+              data: null,
+              message: 'User not found',
+              email: email,
+              editMode: false, 
+            });
+          }
+        });
+      } else {
+        // Render the profile with the fetched teacher data
+        res.render('adminProfile', { 
+          title: 'Update Admin Profile',
+          data: result[0],
+          message: message,
+          email: email,
+          editMode: false, 
+        });
+      }
+    });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if not logged in
+  } else {
+    res.send('Access denied: Admin only');  // If user is not a teacher
+  }
+});
+
+// Route to edit the teacher's profile
+app.get('/editAdmin', function(req, res) {
+  if (req.session.loggedin && req.userRole === 'admin') {
+    const message = req.query.message;  // Retrieve the message from the query string, if any
+    const email = req.session.email;
+
+    // Log session email for debugging
+    //console.log("Session email in editProfile:", email);
+    
+    // Query to get the teacher's profile
+    conn.query("SELECT * FROM teachers AS t INNER JOIN users AS u ON t.Email = u.Email WHERE t.Email = ?", [email], function(err, result) {
+    //  console.log("Query result2:", result);
+      
+      if (err) {
+        console.error("Error fetching profile:", err); 
+        return res.render('adminProfile', { 
+          userRole: req.userRole,  // Use userRole from middleware
+          message: 'Error fetching profile data',
+          data: null,
+          editMode: true,  // No data to show in case of an error
+        });
+      }
+      
+      // Check if the result is empty
+      if (result.length === 0) {
+        // If no profile data found, fetch basic user data from the users table
+        conn.query("SELECT First_Name, Last_Name, Email FROM users WHERE Email = ?", [email], function(err, userResult) {
+          if (err) {
+            console.error("Error fetching user data:", err); 
+            return res.render('adminProfile', { 
+              message: 'Error fetching user data',
+              data: null,
+              editMode: true, 
+            });
+          }
+          
+          // If user data is found, render with that data
+          if (userResult.length > 0) {
+            res.render('adminProfile', { 
+              title: 'Update Admin Profile',
+              data: {  // Create a data object that includes user data
+                First_Name: userResult[0].First_Name,
+                Last_Name: userResult[0].Last_Name,
+                Email: userResult[0].Email,
+                Position: '',  // Default or placeholder if not applicable
+                Qualification: '',  // Default or placeholder if not applicable
+                Note: '',  // Default or placeholder if not applicable
+                Picture: ''  // Default or placeholder if not applicable
+              },
+              message: message,
+              email: email,
+              editMode: true, 
+            });
+          } else {
+            // If no user data is found, handle accordingly
+            res.render('adminProfile', { 
+              title: 'Update Admin Profile',
+              data: null,
+              message: 'User not found',
+              email: email,
+              editMode: true, 
+            });
+          }
+        });
+      } else {
+        // Render the profile with the fetched teacher data
+        res.render('adminProfile', { 
+          title: 'Update Admin Profile',
+          data: result[0],
+          message: message,
+          email: email,
+          editMode: true, 
+        });
+      }
+    });
+  } else if (!req.session.loggedin) {
+    res.redirect('/login');  // Redirect to login if not logged in
+  } else {
+    res.send('Access denied: admin only');  // If user is not a teacher
+  }
+});
+
+app.post('/updateAdminProfile', upload.single('picture'), function (req, res) {
+  if (req.session.loggedin && req.userRole === 'admin') { // Use req.userRole
+
+    const email = req.session.email;
+    const { id, first_name, last_name, position, qualification, note } = req.body;
+    let picture = req.body.oldPicture; // Default to old picture if no new one is uploaded
+
+    // Update picture if a new one is uploaded
+    if (req.file) {
+      picture = req.file.filename;
+    }
+
+    // Check for required fields
+    if (first_name && last_name && position && qualification) {
+
+      // Check if the teacher exists in the 'teachers' table
+      conn.query('SELECT * FROM teachers WHERE Email = ?', [email], (err, teacherResult) => {
+        if (err) {
+          console.error('Error fetching admin data:', err);
+          return res.render('adminProfile', { message: 'Error fetching admin data.', data: req.body });
+        }
+
+        if (teacherResult.length > 0) {
+          // Teacher exists, proceed with the update
+          // console.log("Teacher exists, updating profile", email);
+
+          // Update 'users' table
+          conn.query('UPDATE users SET First_Name = ?, Last_Name = ? WHERE Email = ?',
+            [first_name, last_name, email], (err, result) => {
+              if (err) {
+                console.error('Error updating user profile:', err);
+                return res.render('adminProfile', { message: 'Error updating admin profile.', data: req.body });
+              }
+
+              // Update 'teachers' table
+              conn.query('UPDATE teachers SET Position = ?, Qualification = ?, Note = ?, Picture = ? WHERE Email = ?',
+                [position, qualification, note, picture, email], (err, result) => {
+                  if (err) {
+                    console.error('Error updating admin profile:', err);
+                    return res.render('adminProfile', { message: 'Error updating admin profile.', data: req.body });
+                  }
+
+                  // Successfully updated
+                  res.redirect('/adminProfile?message=Profile updated successfully');
+                });
+            });
+
+        } else {
+          // No teacher record exists, insert a new one
+          // console.log("No teacher record, inserting new profile", email);
+
+          // Insert into 'teachers' table
+          conn.query('INSERT INTO teachers (Email, Position, Qualification, Note, Picture) VALUES (?, ?, ?, ?, ?)',
+            [email, position, qualification, note, picture], (err, insertResult) => {
+              if (err) {
+                console.error('Error inserting admin profile:', err);
+                return res.render('adminProfile', { message: 'Error inserting admin profile.', data: req.body });
+              }
+
+              // Inserted successfully, now update the 'users' table
+              conn.query('UPDATE users SET First_Name = ?, Last_Name = ? WHERE Email = ?',
+                [first_name, last_name, email], (err, result) => {
+                  if (err) {
+                    console.error('Error updating user profile:', err);
+                    return res.render('adminProfile', { message: 'Error updating admin profile.', data: req.body });
+                  }
+
+                  // Successfully inserted and updated
+                  res.redirect('/adminProfile?message=Profile created and updated successfully');
+                });
+            });
+        }
+      });
+
+    } else {
+      // Missing required fields
+      res.redirect('/adminProfile?message=All fields are required');
+    }
+  } else if (!req.session.loggedin) {
+    res.redirect('/login'); // Redirect to login if not logged in
+  } else {
+    res.send('Access denied: Admin only');
+  }
+});
 
 // Route to display the update profile page for parents
 app.get('/parentProfile', function(req, res) {
@@ -1172,6 +1499,8 @@ app.get('/editParent', function(req, res) {
     res.send('Access denied: Parent only');
   }
 });
+
+
 app.post('/updateParentProfile', upload.single('picture'), function (req, res) {
   if (req.session.loggedin && req.userRole === 'parent') {  // Use req.userRole
 
@@ -1918,15 +2247,6 @@ app.post('/add-gallery', upload.single('image'), (req, res) => {
 app.get('/events', (req, res) => {
 
   res.render('events');  // This renders the 'events.ejs' view
-});
-
-// Fetch news and events from database
-app.get('/news_events', (req, res) => {
-  let sql = 'SELECT * FROM events ORDER BY event_date ASC';
-  conn.query(sql, (err, result) => {
-      if (err) throw err;
-      res.render('news_events', { events: result });
-  });
 });
 
 
