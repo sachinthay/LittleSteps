@@ -283,16 +283,31 @@ app.post('/updateEnrollmentDetails', (req, res) => {
 }
 });
 
-
-app.get('/contactUs', (req, res) => {
+// Helper function to fetch contact information
+function getContactInfo(callback) {
   const sql = 'SELECT * FROM contact_info WHERE id = 1'; // Assuming there's only one record
   conn.query(sql, (err, result) => {
-      if (err) {
-          console.error('Error fetching contact info:', err);
-          res.status(500).send('Error retrieving data.');
-      } else {
-          res.render('contactUs', { contact: result[0], message: null }); // Render EJS view with data
-      }
+    if (err) {
+      console.error('Error fetching contact info:', err);
+      return callback(err, null);
+    }
+    const contactData = result.length > 0 ? result[0] : {
+      address: 'N/A',
+      phone: 'N/A',
+      email: 'N/A',
+      location: 'N/A',
+      location_link: ''
+    };
+    callback(null, contactData);
+  });
+}
+
+app.get('/contactUs', (req, res) => {
+  getContactInfo((err, contactData) => {
+    if (err) {
+      return res.status(500).send('Error retrieving contact data.');
+    }
+    res.render('contactUs', { contact: contactData, message: null });
   });
 });
 
@@ -548,23 +563,47 @@ app.get('/adminOnly', (req, res) => {
 app.post('/submitContactForm', (req, res) => {
   const { firstName, gender, email, subject, message } = req.body;
 
-  console.log("Contact Form Submission:", req.body); // Debugging
+  console.log("Contact Form Submission:", req.body);
 
   if (firstName && gender && email && subject && message) {
-      const sql = `INSERT INTO contactUs (First_Name, Gender, Email, Subject, Message) VALUES (?, ?, ?, ?, ?)`;
-      conn.query(sql, [firstName, gender, email, subject, message], (err, result) => {
-          if (err) {
-              console.error("Database Error:", err);
-              return res.status(500).send('Error submitting the contact form.');
-          }
-          console.log("Form submitted successfully:", result);
-          res.render('contactUs', { message: 'Your contact form was successfully submitted. We will reach out soon.' });
+    const sqlInsert = `INSERT INTO contactUs (First_Name, Gender, Email, Subject, Message) VALUES (?, ?, ?, ?, ?)`;
+    conn.query(sqlInsert, [firstName, gender, email, subject, message], (err, result) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).send('Error submitting the contact form.');
+      }
+
+      console.log("Form submitted successfully:", result);
+
+      // Fetch contact data and render page after successful form submission
+      getContactInfo((err, contactData) => {
+        if (err) {
+          return res.status(500).send('Error retrieving contact data.');
+        }
+
+        res.render('contactUs', {
+          contact: contactData,
+          message: 'Your contact form was successfully submitted. We will reach out soon.'
+        });
       });
+    });
   } else {
-      console.error("Missing fields in contact form");
-      res.render('contactUs', { message: 'Please fill in all the required fields.' });
+    console.error("Missing fields in contact form");
+
+    // Fetch contact data and render page with error message
+    getContactInfo((err, contactData) => {
+      if (err) {
+        return res.status(500).send('Error retrieving contact data.');
+      }
+
+      res.render('contactUs', {
+        contact: contactData,
+        message: 'Please fill in all the required fields.'
+      });
+    });
   }
 });
+
 
 app.get('/admin/contactUs', (req, res) => {
   if (req.session.loggedin && req.userRole === 'admin') {
@@ -627,28 +666,50 @@ app.post('/updateContactInfo', (req, res) => {
 
 
 
-// POST submitFeedbackForm - Handles feedback form submission
-app.post('/submitFeedbackForm', function(req, res) {
+// POST /submitFeedbackForm - Handles feedback form submission
+app.post('/submitFeedbackForm', (req, res) => {
+  const { firstName, lastName, gender, email, confirmEmail, feed } = req.body;
 
-  var FirstName = req.body.firstName;
-  var LastName = req.body.lastName;
-  var Gender = req.body.gender;
-  var Email = req.body.email;
-  var ConfirmEmail = req.body.confirmEmail;
-  var Feed = req.body.feed;
+  if (firstName && lastName && gender && email && confirmEmail && feed && email === confirmEmail) {
+    const sql = `INSERT INTO feedBack (First_Name, Last_Name, Gender, Email, Feed) VALUES (?, ?, ?, ?, ?)`;
 
-  if (FirstName && LastName && Gender && Email && ConfirmEmail && Feed && Email === ConfirmEmail) {
-    var sql = `INSERT INTO feedBack (First_Name, Last_Name, Gender, Email, Feed) VALUES (?, ?, ?, ?, ?)`;
-    conn.query(sql, [FirstName, LastName, Gender, Email, Feed], function(err, result) {
-      if (err) throw err;
-      //console.log('Feedback form submitted successfully');
-      res.render('contactUs', { message: 'Your feedback was successfully submitted. Thank you!' });
+    conn.query(sql, [firstName, lastName, gender, email, feed], (err, result) => {
+      if (err) {
+        console.error('Database Error:', err);
+        return res.status(500).send('Error submitting the feedback form.');
+      }
+
+      console.log('Feedback form submitted successfully:', result);
+
+      // Fetch contact info and render the page
+      getContactInfo((err, contactData) => {
+        if (err) {
+          return res.status(500).send('Error retrieving contact data.');
+        }
+
+        res.render('contactUs', {
+          contact: contactData,
+          message: 'Your feedback was successfully submitted. Thank you!',
+        });
+      });
     });
   } else {
-    //console.log("Error: Missing or mismatched form data");
-    res.render('contactUs', { message: 'Please fill in all the required fields, and make sure emails match.' });
+    console.error('Error: Missing or mismatched form data.');
+
+    // Fetch contact info and render the page with an error message
+    getContactInfo((err, contactData) => {
+      if (err) {
+        return res.status(500).send('Error retrieving contact data.');
+      }
+
+      res.render('contactUs', {
+        contact: contactData,
+        message: 'Please fill in all the required fields, and make sure emails match.',
+      });
+    });
   }
 });
+
 
 app.get('/admin/feedback', (req, res) => {
   if (req.session.loggedin && req.userRole === 'admin') {
